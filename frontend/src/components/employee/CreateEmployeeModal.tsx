@@ -7,7 +7,7 @@ interface CreateEmployeeModalProps {
     onClose: () => void;
 }
 
-export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps) {
+export function CreateEmployeeModal({onClose}: CreateEmployeeModalProps) {
     const [formData, setFormData] = React.useState({
         name: '',
         gender: '',
@@ -34,6 +34,8 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
         return !Object.values(newErrors).some((error) => error);
     };
 
+    const [errorMessage, setErrorMessage] = React.useState('');
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validateForm()) return;
@@ -52,24 +54,18 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
                 officerDate: '',
                 staff: [],
             });
-        } catch (error) {
+            setErrorMessage('');
+        } catch (error: any) {
+            setErrorMessage(error.response?.data?.message || 'Failed to create employee');
             console.error('Failed to create employee:', error);
         }
     };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-    };
-
-    if (!opened) return null;
 
     return (
         <div>
             <div onClick={onClose}>×</div>
             <h2>Create New Employee</h2>
+            {errorMessage && <div style={{color: 'red', marginBottom: '10px'}}>{errorMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>
@@ -78,7 +74,7 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
                             type='text'
                             name='name'
                             value={formData.name}
-                            onChange={handleChange}
+                            onChange={(e) => setFormData({...formData, name: e.target.value})}
                             required
                         />
                     </label>
@@ -91,7 +87,7 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
                         <select
                             name='gender'
                             value={formData.gender}
-                            onChange={handleChange}
+                            onChange={(e) => setFormData({...formData, gender: e.target.value})}
                             required>
                             <option value=''>Select gender</option>
                             <option value={Gender.Male}>Male</option>
@@ -108,7 +104,7 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
                             type='date'
                             name='startDate'
                             value={formData.startDate}
-                            onChange={handleChange}
+                            onChange={(e) => setFormData({...formData, startDate: e.target.value})}
                             required
                         />
                     </label>
@@ -122,7 +118,9 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
                             type='date'
                             name='officerDate'
                             value={formData.officerDate}
-                            onChange={handleChange}
+                            onChange={(e) =>
+                                setFormData({...formData, officerDate: e.target.value})
+                            }
                             required
                         />
                     </label>
