@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body} from '@nestjs/common';
+import {Controller, Get, Post, Body, Param} from '@nestjs/common';
 import {EmployeeService} from './employee.service';
 import {Employee} from './models/employee.model';
 
@@ -9,6 +9,11 @@ export class EmployeeController {
     @Get()
     findAll(): Promise<Employee[]> {
         return this.employeeService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string): Promise<Employee> {
+        return this.employeeService.findOne(id);
     }
 
     @Post('create')

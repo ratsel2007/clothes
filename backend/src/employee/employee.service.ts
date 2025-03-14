@@ -1,4 +1,4 @@
-import {Injectable, ConflictException} from '@nestjs/common';
+import {Injectable, ConflictException, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {Employee} from './models/employee.model';
 import {formatDateToDDMMYYYY} from '../functions/formatDate';
@@ -33,5 +33,13 @@ export class EmployeeService {
             ...employee,
             staff: staffData,
         });
+    }
+
+    async findOne(id: string): Promise<Employee> {
+        const employee = await this.employeeModel.findByPk(id);
+        if (!employee) {
+            throw new NotFoundException(`Employee with ID ${id} not found`);
+        }
+        return employee;
     }
 }
