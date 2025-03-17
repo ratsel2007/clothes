@@ -22,7 +22,7 @@ export const Header = () => {
                     value={selectedEmployee?.id || ''}
                     onChange={(e) => dispatch(setSelectedEmployee(e.target.value))}>
                     <option value=''>Select employee</option>
-                    {employees.map((employee) => (
+                    {employees.map((employee: any) => (
                         <option key={employee.id} value={employee.id}>
                             {employee.name}
                         </option>

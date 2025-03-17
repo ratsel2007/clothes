@@ -19,7 +19,10 @@ export const deleteEmployee = createAsyncThunk('employees/delete', async (id: st
     return id;
 });
 
-// Add to extraReducers:
+export const updateEmployee = createAsyncThunk('employees/update', async (employee: Employee) => {
+    const response = await employeeApi.updateEmployee(employee);
+    return response;
+});
 
 interface EmployeeState {
     employees: Employee[];
@@ -59,6 +62,22 @@ const employeeSlice = createSlice({
             .addCase(deleteEmployee.fulfilled, (state, action) => {
                 state.employees = state.employees.filter((emp) => emp.id !== action.payload);
                 state.selectedEmployee = null;
+            })
+            .addCase(updateEmployee.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateEmployee.fulfilled, (state, action) => {
+                state.loading = false;
+                const index = state.employees.findIndex((emp) => emp.id === action.payload.id);
+                if (index !== -1) {
+                    state.employees[index] = action.payload;
+                    state.selectedEmployee = action.payload;
+                }
+            })
+            .addCase(updateEmployee.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to update employee';
             });
     },
 });

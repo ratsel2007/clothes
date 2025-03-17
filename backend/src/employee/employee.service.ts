@@ -62,4 +62,15 @@ export class EmployeeService {
         await employee.destroy();
         return {message: `Employee with ID ${id} has been deleted successfully`};
     }
+
+    async update(id: string, employee: Employee): Promise<Employee> {
+        const existingEmployee = await this.employeeModel.findByPk(id);
+
+        if (!existingEmployee) {
+            throw new NotFoundException(`Employee with ID ${id} not found`);
+        }
+
+        await existingEmployee.update(employee);
+        return existingEmployee;
+    }
 }

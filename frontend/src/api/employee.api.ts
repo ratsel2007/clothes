@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {Employee} from '../types/employee.types';
 
 const API_URL = 'http://localhost:3000';
 
@@ -15,6 +16,11 @@ export const employeeApi = {
 
     deleteById: async (id: string) => {
         const response = await axios.delete(`${API_URL}/employee/${id}`);
+        return response.data;
+    },
+
+    updateEmployee: async (employee: Employee) => {
+        const response = await axios.put<Employee>(`${API_URL}/employee/${employee.id}`, employee);
         return response.data;
     },
 };

@@ -1,5 +1,6 @@
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
+import {ItemPeriod} from './ItemPeriod';
 import {Staff} from './../types/employee.types';
 
 interface ItemProps {
@@ -7,20 +8,21 @@ interface ItemProps {
 }
 
 export const Item = ({staff}: ItemProps) => {
-    const selectedEmployee = useSelector((state: RootState) => state.employees.selectedEmployee);
-
     return (
         <div>
-            <h3>{staff.name}</h3>
+            <h3>
+                {staff.name} | {staff.totalQuantity}
+            </h3>
             <div>
                 {staff.issuances.map((issuance, index) => (
-                    <div key={index}>
-                        <span>Date: {issuance.date}</span>
-                        <span>Quantity: {issuance.quantity}</span>
-                    </div>
+                    <ItemPeriod
+                        key={index}
+                        period={issuance}
+                        staffName={staff.name}
+                        periodIndex={index}
+                    />
                 ))}
             </div>
-            <p>Total Quantity: {staff.totalQuantity}</p>
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Param, Delete} from '@nestjs/common';
+import {Controller, Get, Post, Body, Param, Delete, Put} from '@nestjs/common';
 import {EmployeeService} from './employee.service';
 import {Employee} from './models/employee.model';
 
@@ -29,5 +29,10 @@ export class EmployeeController {
     @Delete(':id')
     async deleteById(@Param('id') id: string) {
         return this.employeeService.deleteById(id);
+    }
+
+    @Put(':id')
+    async update(@Param('id') id: string, @Body() employee: Employee): Promise<Employee> {
+        return this.employeeService.update(id, employee);
     }
 }
