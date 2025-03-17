@@ -171,6 +171,7 @@ function calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName) 
         issuances.push({
             date: formatDate(currentIssueDate),
             quantity: applicablePeriod.quantity,
+            used: 0,
         });
         totalQuantity += applicablePeriod.quantity;
 
@@ -180,29 +181,27 @@ function calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName) 
         currentIssueDate.setMonth(currentIssueDate.getMonth() + applicablePeriod.period_months);
     }
 
-    return {issuances, totalQuantity};
+    // Get the cash value from the appropriate item
+    const cash = isOfficerOnly ? officerItem.cash : nonOfficerItem?.cash || officerItem?.cash;
+
+    return {issuances, totalQuantity, cash};
 }
 
-/**
- * Обрабатывает все имущество для сотрудника
- * @param {string} startWorkDate - Дата начала работы
- * @param {string} officerPromotionDate - Дата получения звания офицера
- * @returns {Object} - Результат обработки всего имущества
- */
 export function processEquipment(startWorkDate, officerPromotionDate) {
-    const result = {};
     const allItems = new Set([
         ...officerData.map((item) => item.item_name),
         ...nonOfficerData.map((item) => item.item_name),
     ]);
 
-    for (const itemName of allItems) {
+    const result = Array.from(allItems).map((itemName) => {
         const itemResult = calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName);
-        result[itemName] = {
+        return {
+            name: itemName,
             issuances: itemResult.issuances,
             totalQuantity: itemResult.totalQuantity,
+            cash: itemResult.cash,
         };
-    }
+    });
 
     return result;
 }

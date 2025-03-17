@@ -1,24 +1,28 @@
 import React from 'react';
-import {observer} from 'mobx-react-lite';
+import {useSelector, useDispatch} from 'react-redux';
 import {CreateEmployeeModal} from './employee/CreateEmployeeModal';
-import {employeeStore} from '../stores/employeeStore';
+import {RootState} from '../store/store';
+import {fetchEmployees, setSelectedEmployee} from '../store/employeeSlice';
 
-export const Header = observer(() => {
+export const Header = () => {
+    const dispatch = useDispatch();
     const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const employees = useSelector((state: RootState) => state.employees.employees);
+    const selectedEmployee = useSelector((state: RootState) => state.employees.selectedEmployee);
 
     React.useEffect(() => {
-        employeeStore.fetchEmployees();
-    }, [isModalOpen]);
+        dispatch(fetchEmployees() as any);
+    }, [isModalOpen, dispatch]);
 
     return (
         <header>
             <h1>Выдача имущества</h1>
             <div>
                 <select
-                    value={employeeStore.selectedEmployee?.id || ''}
-                    onChange={(e) => employeeStore.setSelectedEmployee(e.target.value)}>
+                    value={selectedEmployee?.id || ''}
+                    onChange={(e) => dispatch(setSelectedEmployee(e.target.value))}>
                     <option value=''>Select employee</option>
-                    {employeeStore.employees.map((employee) => (
+                    {employees.map((employee) => (
                         <option key={employee.id} value={employee.id}>
                             {employee.name}
                         </option>
@@ -30,4 +34,4 @@ export const Header = observer(() => {
             <CreateEmployeeModal opened={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </header>
     );
-});
+};

@@ -1,0 +1,67 @@
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
+import {employeeApi} from '../api/employee.api';
+import {Employee} from '../types/employee.types';
+
+export const fetchEmployees = createAsyncThunk('employees/fetchAll', async () => {
+    const response = await employeeApi.getAll();
+    return response || [];
+});
+
+export const fetchEmployeeById = createAsyncThunk('employees/fetchOne', async (id: string) => {
+    const response = await employeeApi
+        .getAll()
+        .then((employees) => employees.find((employee: Employee) => employee.id === id));
+    return response;
+});
+
+export const deleteEmployee = createAsyncThunk('employees/delete', async (id: string) => {
+    await employeeApi.deleteById(id);
+    return id;
+});
+
+// Add to extraReducers:
+
+interface EmployeeState {
+    employees: Employee[];
+    selectedEmployee: Employee | null;
+    loading: boolean;
+    error: string | null;
+}
+
+const initialState: EmployeeState = {
+    employees: [],
+    selectedEmployee: null,
+    loading: false,
+    error: null,
+};
+
+const employeeSlice = createSlice({
+    name: 'employees',
+    initialState,
+    reducers: {
+        setSelectedEmployee: (state, action: PayloadAction<string>) => {
+            state.selectedEmployee =
+                state.employees.find((emp) => emp.id === action.payload) || null;
+        },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchEmployees.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchEmployees.fulfilled, (state, action) => {
+                state.loading = false;
+                state.employees = action.payload;
+            })
+            .addCase(fetchEmployeeById.fulfilled, (state, action) => {
+                state.selectedEmployee = action.payload;
+            })
+            .addCase(deleteEmployee.fulfilled, (state, action) => {
+                state.employees = state.employees.filter((emp) => emp.id !== action.payload);
+                state.selectedEmployee = null;
+            });
+    },
+});
+
+export const {setSelectedEmployee} = employeeSlice.actions;
+export default employeeSlice.reducer;

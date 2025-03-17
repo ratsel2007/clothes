@@ -1,21 +1,34 @@
-import {observer} from 'mobx-react-lite';
-import {employeeStore} from '../stores/employeeStore';
 import {useEffect} from 'react';
-import {Staff} from '../components/Staff';
+import {useSelector, useDispatch} from 'react-redux';
+import {RootState} from '../store/store';
+import {Item} from '../components/Item';
+import {fetchEmployees, deleteEmployee} from '../store/employeeSlice';
 
-export const Home = observer(() => {
+export const Home = () => {
+    const dispatch = useDispatch();
+    const selectedEmployee = useSelector((state: RootState) => state.employees.selectedEmployee);
+
     useEffect(() => {
-        console.log('Selected Employee:', employeeStore.selectedEmployee?.staff);
-    }, [employeeStore.selectedEmployee]);
+        dispatch(fetchEmployees() as any);
+    }, [dispatch]);
+
+    const handleDelete = () => {
+        if (selectedEmployee?.id) {
+            dispatch(deleteEmployee(selectedEmployee.id) as any);
+        }
+    };
 
     return (
         <div>
             <h2>Welcome to Clothes Shop</h2>
-            <h3>{employeeStore.selectedEmployee?.name || 'Select an employee'}</h3>
-            <h4>{employeeStore.selectedEmployee?.gender || 'No gender specified'}</h4>
-            {/* {employeeStore.selectedEmployee?.staff.map((item) => ( <Staff key={item.id} />)} */}
+            {selectedEmployee && (
+                <button onClick={handleDelete}>Delete {selectedEmployee.name}</button>
+            )}
 
-            <Staff />
+            <h3>{selectedEmployee?.name || 'Select an employee'}</h3>
+            {selectedEmployee?.staff?.map((item, index) => (
+                <Item key={index} staff={item} />
+            ))}
         </div>
     );
-});
+};

@@ -40,6 +40,26 @@ export class EmployeeService {
         if (!employee) {
             throw new NotFoundException(`Employee with ID ${id} not found`);
         }
+        console.log(employee);
         return employee;
+    }
+
+    async deleteAll(): Promise<{message: string}> {
+        await this.employeeModel.destroy({
+            where: {},
+            truncate: true,
+        });
+        return {message: 'All employees have been deleted successfully'};
+    }
+
+    async deleteById(id: string): Promise<{message: string}> {
+        const employee = await this.employeeModel.findByPk(id);
+
+        if (!employee) {
+            throw new NotFoundException(`Employee with ID ${id} not found`);
+        }
+
+        await employee.destroy();
+        return {message: `Employee with ID ${id} has been deleted successfully`};
     }
 }

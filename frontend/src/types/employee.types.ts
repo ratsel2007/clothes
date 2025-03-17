@@ -101,6 +101,8 @@ export interface WearingPeriod {
  * Интерфейс, представляющий имущество
  */
 export interface Staff {
+    /** Наименование имущества */
+    name: string;
     /** Массив периодов ношения */
     issuances: WearingPeriod[];
     /** Общее количество */
