@@ -3,6 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../store/store';
 import {Item} from '../components/Item';
 import {fetchEmployees, deleteEmployee} from '../store/employeeSlice';
+import {Container, Button, Alert} from 'react-bootstrap';
 
 export const Home = () => {
     const dispatch = useDispatch();
@@ -19,16 +20,24 @@ export const Home = () => {
     };
 
     return (
-        <div>
-            <h2>Welcome to Clothes Shop</h2>
+        <Container>
             {selectedEmployee && (
-                <button onClick={handleDelete}>Delete {selectedEmployee.name}</button>
+                <div className='d-flex justify-content-end mb-3'>
+                    <Button variant='danger' onClick={handleDelete}>
+                        Удалить сотрудника {selectedEmployee.name}
+                    </Button>
+                </div>
             )}
 
-            <h3>{selectedEmployee?.name || 'Select an employee'}</h3>
-            {selectedEmployee?.staff?.map((item, index) => (
-                <Item key={index} staff={item} />
-            ))}
-        </div>
+            <Alert variant={selectedEmployee ? 'info' : 'warning'} className='mb-4'>
+                <h3 className='m-0'>{selectedEmployee?.name || 'Выберите сотрудника'}</h3>
+            </Alert>
+
+            <div className='d-flex flex-column gap-3'>
+                {selectedEmployee?.staff?.map((item, index) => (
+                    <Item key={index} staff={item} />
+                ))}
+            </div>
+        </Container>
     );
 };

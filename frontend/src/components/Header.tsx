@@ -1,4 +1,5 @@
 import React from 'react';
+import {Form, Button} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import {CreateEmployeeModal} from './employee/CreateEmployeeModal';
 import {RootState} from '../store/store';
@@ -17,19 +18,21 @@ export const Header = () => {
     return (
         <header>
             <h1>Выдача имущества</h1>
-            <div>
-                <select
+            <div className='d-flex gap-3 align-items-center justify-content-center'>
+                <Form.Select
                     value={selectedEmployee?.id || ''}
-                    onChange={(e) => dispatch(setSelectedEmployee(e.target.value))}>
-                    <option value=''>Select employee</option>
+                    onChange={(e) => dispatch(setSelectedEmployee(e.target.value))}
+                    style={{width: 'auto'}}>
+                    <option value=''>Выбрать сотрудника</option>
                     {employees.map((employee: any) => (
                         <option key={employee.id} value={employee.id}>
                             {employee.name}
                         </option>
                     ))}
-                </select>
-                <br />
-                <button onClick={() => setIsModalOpen(true)}>Create Employee</button>
+                </Form.Select>
+                <Button variant='primary' onClick={() => setIsModalOpen(true)}>
+                    Добавить сотрудника
+                </Button>
             </div>
             <CreateEmployeeModal opened={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </header>

@@ -1,5 +1,3 @@
-import {useSelector} from 'react-redux';
-import {RootState} from '../store/store';
 import {ItemPeriod} from './ItemPeriod';
 import {Staff} from './../types/employee.types';
 
@@ -13,7 +11,7 @@ export const Item = ({staff}: ItemProps) => {
             <h3>
                 {staff.name} | {staff.totalQuantity}
             </h3>
-            <div>
+            <div className='flex'>
                 {staff.issuances.map((issuance, index) => (
                     <ItemPeriod
                         key={index}

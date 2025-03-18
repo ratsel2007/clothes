@@ -27,7 +27,11 @@ export class EmployeeService {
 
         const formattedStartDate = formatDateToDDMMYYYY(employee.startDate);
         const formattedOfficerDate = formatDateToDDMMYYYY(employee.officerDate);
-        const staffData = processEquipment(formattedStartDate, formattedOfficerDate);
+        const staffData = processEquipment(
+            formattedStartDate,
+            formattedOfficerDate,
+            employee.gender
+        );
 
         return this.employeeModel.create({
             ...employee,

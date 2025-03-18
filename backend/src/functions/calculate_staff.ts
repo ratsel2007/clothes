@@ -10,6 +10,16 @@ const nonOfficerData = JSON.parse(
 );
 
 /**
+ * Add new data files
+ */
+const womanOfficerData = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '..', 'data', 'woman_officer_data.json'), 'utf8')
+);
+const womanNonOfficerData = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '..', 'data', 'woman_non_officer_data.json'), 'utf8')
+);
+
+/**
  * Преобразует строку даты из формата DD.MM.YYYY в объект Date
  * @param {string} dateStr - Дата в формате DD.MM.YYYY
  * @returns {Date|null} - Объект Date или null, если дата не указана
@@ -96,16 +106,23 @@ function determineFirstAvailableDate(item, workStartDate, promotionDate, isOffic
  * @param {string} itemName - Наименование имущества
  * @returns {Object} - Объект с датами выдачи и количеством
  */
-function calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName) {
+function calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName, gender) {
     const workStartDate = parseDate(startWorkDate);
     const promotionDate = parseDate(officerPromotionDate);
     const currentDate = new Date();
     const issuances = [];
     let totalQuantity = 0;
 
-    // Поиск имущества в обоих наборах данных
-    const nonOfficerItem = nonOfficerData.find((item) => item.item_name === itemName);
-    const officerItem = officerData.find((item) => item.item_name === itemName);
+    // Select data based on gender
+    const nonOfficerItem =
+        gender === 'female'
+            ? womanNonOfficerData.find((item) => item.item_name === itemName)
+            : nonOfficerData.find((item) => item.item_name === itemName);
+
+    const officerItem =
+        gender === 'female'
+            ? womanOfficerData.find((item) => item.item_name === itemName)
+            : officerData.find((item) => item.item_name === itemName);
 
     if (!nonOfficerItem && !officerItem) return {issuances: [], totalQuantity: 0};
 
@@ -187,14 +204,21 @@ function calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName) 
     return {issuances, totalQuantity, cash};
 }
 
-export function processEquipment(startWorkDate, officerPromotionDate) {
+export function processEquipment(startWorkDate, officerPromotionDate, gender) {
     const allItems = new Set([
-        ...officerData.map((item) => item.item_name),
-        ...nonOfficerData.map((item) => item.item_name),
+        ...(gender === 'female' ? womanOfficerData : officerData).map((item) => item.item_name),
+        ...(gender === 'female' ? womanNonOfficerData : nonOfficerData).map(
+            (item) => item.item_name
+        ),
     ]);
 
     const result = Array.from(allItems).map((itemName) => {
-        const itemResult = calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName);
+        const itemResult = calculateEquipmentDates(
+            startWorkDate,
+            officerPromotionDate,
+            itemName,
+            gender
+        );
         return {
             name: itemName,
             issuances: itemResult.issuances,
@@ -205,6 +229,11 @@ export function processEquipment(startWorkDate, officerPromotionDate) {
 
     return result;
 }
+
+// Example calculation for summer dress
+const result = processEquipment('12.02.2012', '12.02.2018', 'female');
+const summerDress = result.find((item) => item.name === 'платье летнее');
+console.log('Summer Dress Issuances:', summerDress);
 
 // // Создание интерфейса для чтения пользовательского ввода
 // const rl = readline.createInterface({

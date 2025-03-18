@@ -1,4 +1,5 @@
 import React from 'react';
+import {Modal, Form, Button, Alert} from 'react-bootstrap';
 import {Gender} from '../../types/employee.types';
 import {employeeApi} from '../../api/employee.api';
 
@@ -7,7 +8,7 @@ interface CreateEmployeeModalProps {
     onClose: () => void;
 }
 
-export function CreateEmployeeModal({onClose}: CreateEmployeeModalProps) {
+export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps) {
     const [formData, setFormData] = React.useState({
         name: '',
         gender: '',
@@ -62,73 +63,77 @@ export function CreateEmployeeModal({onClose}: CreateEmployeeModalProps) {
     };
 
     return (
-        <div>
-            <div onClick={onClose}>×</div>
-            <h2>Create New Employee</h2>
-            {errorMessage && <div style={{color: 'red', marginBottom: '10px'}}>{errorMessage}</div>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>
-                        Name:
-                        <input
+        <Modal show={opened} onHide={onClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Create New Employee</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group className='mb-3'>
+                        <Form.Label>ФИО</Form.Label>
+                        <Form.Control
                             type='text'
-                            name='name'
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            required
+                            isInvalid={!!errors.name}
                         />
-                    </label>
-                    {errors.name && <span>{errors.name}</span>}
-                </div>
+                        <Form.Control.Feedback type='invalid'>{errors.name}</Form.Control.Feedback>
+                    </Form.Group>
 
-                <div>
-                    <label>
-                        Gender:
-                        <select
-                            name='gender'
+                    <Form.Group className='mb-3'>
+                        <Form.Label>Пол</Form.Label>
+                        <Form.Select
                             value={formData.gender}
                             onChange={(e) => setFormData({...formData, gender: e.target.value})}
-                            required>
-                            <option value=''>Select gender</option>
-                            <option value={Gender.Male}>Male</option>
-                            <option value={Gender.Female}>Female</option>
-                        </select>
-                    </label>
-                    {errors.gender && <span>{errors.gender}</span>}
-                </div>
+                            isInvalid={!!errors.gender}>
+                            <option value=''>Выберите пол</option>
+                            <option value={Gender.Male}>Мужской</option>
+                            <option value={Gender.Female}>Женский</option>
+                        </Form.Select>
+                        <Form.Control.Feedback type='invalid'>
+                            {errors.gender}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                <div>
-                    <label>
-                        Start Date:
-                        <input
+                    <Form.Group className='mb-3'>
+                        <Form.Label>Дата начала службы</Form.Label>
+                        <Form.Control
                             type='date'
-                            name='startDate'
                             value={formData.startDate}
                             onChange={(e) => setFormData({...formData, startDate: e.target.value})}
-                            required
+                            isInvalid={!!errors.startDate}
                         />
-                    </label>
-                    {errors.startDate && <span>{errors.startDate}</span>}
-                </div>
+                        <Form.Control.Feedback type='invalid'>
+                            {errors.startDate}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                <div>
-                    <label>
-                        Officer Date:
-                        <input
+                    <Form.Group className='mb-3'>
+                        <Form.Label>Дата присвоения офицерского звания</Form.Label>
+                        <Form.Control
                             type='date'
-                            name='officerDate'
                             value={formData.officerDate}
                             onChange={(e) =>
                                 setFormData({...formData, officerDate: e.target.value})
                             }
-                            required
+                            isInvalid={!!errors.officerDate}
                         />
-                    </label>
-                    {errors.officerDate && <span>{errors.officerDate}</span>}
-                </div>
+                        <Form.Control.Feedback type='invalid'>
+                            {errors.officerDate}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                <button type='submit'>Create Employee</button>
-            </form>
-        </div>
+                    <div className='d-flex justify-content-end gap-2'>
+                        <Button variant='secondary' onClick={onClose}>
+                            Отмена
+                        </Button>
+                        <Button variant='primary' type='submit'>
+                            Добавить сотрудника
+                        </Button>
+                    </div>
+                </Form>
+            </Modal.Body>
+        </Modal>
     );
 }
