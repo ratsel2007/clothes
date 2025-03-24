@@ -1,8 +1,8 @@
 import {Injectable, ConflictException, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {Employee} from './models/employee.model';
-import {formatDateToDDMMYYYY} from '../functions/formatDate';
 import {processEquipment} from '../functions/calculate_staff';
+import {compareAndUpdateEmployeeVersions} from '../functions/compare_employee_versions';
 
 @Injectable()
 export class EmployeeService {
@@ -25,27 +25,40 @@ export class EmployeeService {
             throw new ConflictException(`Сотрудник с именем ${employee.name} уже существует`);
         }
 
-        const formattedStartDate = formatDateToDDMMYYYY(employee.startDate);
-        const formattedOfficerDate = formatDateToDDMMYYYY(employee.officerDate);
         const staffData = processEquipment(
-            formattedStartDate,
-            formattedOfficerDate,
-            employee.gender
+            employee.startDate,
+            employee.officerDate,
+            employee.gender,
+            employee.maternityLeaveStart,
+            employee.maternityLeaveDuration || 0
         );
 
         return this.employeeModel.create({
-            ...employee,
+            name: employee.name,
+            gender: employee.gender,
+            startDate: employee.startDate,
+            officerDate: employee.officerDate,
+            maternityLeaveStart: employee.maternityLeaveStart,
+            maternityLeaveDuration: employee.maternityLeaveDuration,
             staff: staffData,
         });
     }
 
     async findOne(id: string): Promise<Employee> {
-        const employee = await this.employeeModel.findByPk(id);
-        if (!employee) {
+        // Find existing employee
+        const existingEmployee = await this.employeeModel.findByPk(id);
+        if (!existingEmployee) {
             throw new NotFoundException(`Employee with ID ${id} not found`);
         }
-        console.log(employee);
-        return employee;
+
+        const updatedStaff = compareAndUpdateEmployeeVersions(existingEmployee);
+
+        // Update employee if changes were made
+        if (JSON.stringify(existingEmployee.staff) !== JSON.stringify(updatedStaff)) {
+            await existingEmployee.update({staff: updatedStaff});
+        }
+
+        return existingEmployee;
     }
 
     async deleteAll(): Promise<{message: string}> {

@@ -1,5 +1,4 @@
 const fs = require('fs');
-const readline = require('readline');
 const path = require('path');
 
 const officerData = JSON.parse(
@@ -66,10 +65,24 @@ function findApplicablePeriod(data, date) {
  * @param {Date} currentDate - Текущая дата
  * @returns {boolean} - true если срок истек
  */
-function isPreviousIssuanceExpired(lastIssueDate, periodMonths, currentDate) {
+function isPreviousIssuanceExpired(
+    lastIssueDate,
+    periodMonths,
+    currentDate,
+    maternityStart,
+    maternityLeaveDuration
+) {
     if (!lastIssueDate) return true;
     const expirationDate = new Date(lastIssueDate);
+
+    // Calculate base expiration
     expirationDate.setMonth(expirationDate.getMonth() + periodMonths);
+
+    // If maternity leave starts during the wearing period, extend it
+    if (maternityStart && lastIssueDate <= maternityStart && maternityStart <= expirationDate) {
+        expirationDate.setMonth(expirationDate.getMonth() + maternityLeaveDuration);
+    }
+
     return currentDate >= expirationDate;
 }
 
@@ -106,10 +119,19 @@ function determineFirstAvailableDate(item, workStartDate, promotionDate, isOffic
  * @param {string} itemName - Наименование имущества
  * @returns {Object} - Объект с датами выдачи и количеством
  */
-function calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName, gender) {
+function calculateEquipmentDates(
+    startWorkDate,
+    officerPromotionDate,
+    itemName,
+    gender,
+    maternityLeaveStart = null,
+    maternityLeaveDuration = 0
+) {
     const workStartDate = parseDate(startWorkDate);
     const promotionDate = parseDate(officerPromotionDate);
+    const maternityStart = maternityLeaveStart ? parseDate(maternityLeaveStart) : null;
     const currentDate = new Date();
+
     const issuances = [];
     let totalQuantity = 0;
 
@@ -174,7 +196,9 @@ function calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName, 
                 !isPreviousIssuanceExpired(
                     lastIssuanceDate,
                     prevPeriod.period_months,
-                    currentIssueDate
+                    currentIssueDate,
+                    maternityStart,
+                    maternityLeaveDuration
                 )
             ) {
                 // Если срок не истек, переходим к следующей дате
@@ -196,6 +220,18 @@ function calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName, 
         lastIssuanceDate = new Date(currentIssueDate);
         currentIssueDate = new Date(currentIssueDate);
         currentIssueDate.setMonth(currentIssueDate.getMonth() + applicablePeriod.period_months);
+
+        // Check if maternity leave affects this issuance period
+        if (maternityStart && gender === 'female') {
+            const issuanceEndDate = new Date(currentIssueDate);
+            issuanceEndDate.setMonth(issuanceEndDate.getMonth() + applicablePeriod.period_months);
+
+            // If maternity leave overlaps with the wearing period
+            if (currentIssueDate <= maternityStart && maternityStart <= issuanceEndDate) {
+                // Extend the next issuance date by maternity leave duration
+                currentIssueDate.setMonth(currentIssueDate.getMonth() + maternityLeaveDuration);
+            }
+        }
     }
 
     // Get the cash value from the appropriate item
@@ -204,7 +240,41 @@ function calculateEquipmentDates(startWorkDate, officerPromotionDate, itemName, 
     return {issuances, totalQuantity, cash};
 }
 
-export function processEquipment(startWorkDate, officerPromotionDate, gender) {
+/**
+ * Форматирует дату в строку формата DD.MM.YYYY
+ * @param {Date} date - Дата для форматирования
+ * @returns {string} - Дата в формате DD.MM.YYYY
+ */
+function formatDateToDDMMYYYY(date: Date | string): string {
+    if (!date) return null;
+
+    // Convert to Date object if it's a string
+    const dateObject = date instanceof Date ? date : new Date(date);
+
+    // Check if date is valid
+    if (isNaN(dateObject.getTime())) return null;
+
+    return dateObject.toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
+}
+
+export function processEquipment(
+    startWorkDate: Date | string,
+    officerPromotionDate: Date | string,
+    gender: 'male' | 'female',
+    maternityLeaveStart: Date | string | null,
+    maternityLeaveDuration: number
+) {
+    // Format dates to DD.MM.YYYY string format first
+    const formattedStartDate = formatDateToDDMMYYYY(startWorkDate);
+    const formattedOfficerDate = formatDateToDDMMYYYY(officerPromotionDate);
+    const formattedMaternityDate = maternityLeaveStart
+        ? formatDateToDDMMYYYY(maternityLeaveStart)
+        : null;
+
     const allItems = new Set([
         ...(gender === 'female' ? womanOfficerData : officerData).map((item) => item.item_name),
         ...(gender === 'female' ? womanNonOfficerData : nonOfficerData).map(
@@ -214,10 +284,12 @@ export function processEquipment(startWorkDate, officerPromotionDate, gender) {
 
     const result = Array.from(allItems).map((itemName) => {
         const itemResult = calculateEquipmentDates(
-            startWorkDate,
-            officerPromotionDate,
+            formattedStartDate,
+            formattedOfficerDate,
             itemName,
-            gender
+            gender,
+            formattedMaternityDate,
+            maternityLeaveDuration || 0
         );
         return {
             name: itemName,
@@ -229,27 +301,3 @@ export function processEquipment(startWorkDate, officerPromotionDate, gender) {
 
     return result;
 }
-
-// Example calculation for summer dress
-const result = processEquipment('12.02.2012', '12.02.2018', 'female');
-const summerDress = result.find((item) => item.name === 'платье летнее');
-console.log('Summer Dress Issuances:', summerDress);
-
-// // Создание интерфейса для чтения пользовательского ввода
-// const rl = readline.createInterface({
-//     input: process.stdin,
-//     output: process.stdout,
-// });
-
-// // Запрос дат у пользователя и обработка данных
-// rl.question('Введите дату начала работы (в формате DD.MM.YYYY): ', (startWorkDate) => {
-//     rl.question(
-//         'Введите дату получения звания офицера (в формате DD.MM.YYYY): ',
-//         (officerPromotionDate) => {
-//             const result = processEquipment(startWorkDate, officerPromotionDate);
-//             fs.writeFileSync('result.json', JSON.stringify(result, null, 2), 'utf8');
-//             console.log('Результат сохранен в файл result.json');
-//             rl.close();
-//         }
-//     );
-// });

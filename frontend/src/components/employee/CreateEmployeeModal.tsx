@@ -9,11 +9,14 @@ interface CreateEmployeeModalProps {
 }
 
 export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps) {
+    const [errorMessage, setErrorMessage] = React.useState('');
     const [formData, setFormData] = React.useState({
         name: '',
         gender: '',
         startDate: '',
         officerDate: '',
+        maternityLeaveStart: '',
+        maternityLeaveDuration: '',
         staff: [],
     });
 
@@ -22,6 +25,8 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
         gender: '',
         startDate: '',
         officerDate: '',
+        maternityLeaveStart: '',
+        maternityLeaveDuration: '',
     });
 
     const validateForm = () => {
@@ -30,12 +35,12 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
             gender: !formData.gender ? 'Gender is required' : '',
             startDate: !formData.startDate ? 'Start date is required' : '',
             officerDate: !formData.officerDate ? 'Officer date is required' : '',
+            maternityLeaveStart: '',
+            maternityLeaveDuration: '',
         };
         setErrors(newErrors);
         return !Object.values(newErrors).some((error) => error);
     };
-
-    const [errorMessage, setErrorMessage] = React.useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -46,6 +51,12 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
                 ...formData,
                 startDate: new Date(formData.startDate).toISOString(),
                 officerDate: new Date(formData.officerDate).toISOString(),
+                maternityLeaveStart: formData.maternityLeaveStart
+                    ? new Date(formData.maternityLeaveStart).toISOString()
+                    : null,
+                maternityLeaveDuration: formData.maternityLeaveDuration
+                    ? parseInt(formData.maternityLeaveDuration)
+                    : null,
             });
             onClose();
             setFormData({
@@ -53,6 +64,8 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
                 gender: '',
                 startDate: '',
                 officerDate: '',
+                maternityLeaveStart: '',
+                maternityLeaveDuration: '',
                 staff: [],
             });
             setErrorMessage('');
@@ -123,6 +136,49 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
                             {errors.officerDate}
                         </Form.Control.Feedback>
                     </Form.Group>
+
+                    {formData.gender === Gender.Female && (
+                        <>
+                            <Form.Group className='mb-3'>
+                                <Form.Label>Дата начала декретного отпуска</Form.Label>
+                                <Form.Control
+                                    type='date'
+                                    value={formData.maternityLeaveStart}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            maternityLeaveStart: e.target.value,
+                                        })
+                                    }
+                                    isInvalid={!!errors.maternityLeaveStart}
+                                />
+                                <Form.Control.Feedback type='invalid'>
+                                    {errors.maternityLeaveStart}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                            <Form.Group className='mb-3'>
+                                <Form.Label>
+                                    Продолжительность декретного отпуска (месяцев)
+                                </Form.Label>
+                                <Form.Control
+                                    type='number'
+                                    min='1'
+                                    value={formData.maternityLeaveDuration}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            maternityLeaveDuration: e.target.value,
+                                        })
+                                    }
+                                    isInvalid={!!errors.maternityLeaveDuration}
+                                />
+                                <Form.Control.Feedback type='invalid'>
+                                    {errors.maternityLeaveDuration}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </>
+                    )}
 
                     <div className='d-flex justify-content-end gap-2'>
                         <Button variant='secondary' onClick={onClose}>

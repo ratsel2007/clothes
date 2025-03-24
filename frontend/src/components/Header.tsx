@@ -3,7 +3,7 @@ import {Form, Button} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import {CreateEmployeeModal} from './employee/CreateEmployeeModal';
 import {RootState} from '../store/store';
-import {fetchEmployees, setSelectedEmployee} from '../store/employeeSlice';
+import {fetchEmployees, setSelectedEmployee, deleteEmployee} from '../store/employeeSlice';
 
 export const Header = () => {
     const dispatch = useDispatch();
@@ -15,10 +15,15 @@ export const Header = () => {
         dispatch(fetchEmployees() as any);
     }, [isModalOpen, dispatch]);
 
+    const handleDelete = () => {
+        if (selectedEmployee?.id) {
+            dispatch(deleteEmployee(selectedEmployee.id) as any);
+        }
+    };
+
     return (
         <header>
-            <h1>Выдача имущества</h1>
-            <div className='d-flex gap-3 align-items-center justify-content-center'>
+            <div className='d-flex gap-3 align-items-center pb-4'>
                 <Form.Select
                     value={selectedEmployee?.id || ''}
                     onChange={(e) => dispatch(setSelectedEmployee(e.target.value))}
@@ -30,6 +35,11 @@ export const Header = () => {
                         </option>
                     ))}
                 </Form.Select>
+                {selectedEmployee && (
+                    <Button variant='danger' onClick={handleDelete}>
+                        Удалить сотрудника
+                    </Button>
+                )}
                 <Button variant='primary' onClick={() => setIsModalOpen(true)}>
                     Добавить сотрудника
                 </Button>

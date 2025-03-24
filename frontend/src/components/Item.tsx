@@ -9,7 +9,7 @@ export const Item = ({staff}: ItemProps) => {
     return (
         <div>
             <h3>
-                {staff.name} | {staff.totalQuantity}
+                {staff.name} | {staff.totalQuantity} | {staff.totalQuantity * (staff.cash || 0)} ₽
             </h3>
             <div className='flex'>
                 {staff.issuances.map((issuance, index) => (

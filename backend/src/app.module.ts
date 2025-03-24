@@ -10,7 +10,7 @@ import {EmployeeModule} from './employee/employee.module';
             port: 5432,
             username: 'postgres',
             password: 'postgres',
-            database: 'clothes_db',
+            database: 'clothes',
             autoLoadModels: true,
             synchronize: true,
         }),

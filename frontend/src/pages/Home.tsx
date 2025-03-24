@@ -21,14 +21,6 @@ export const Home = () => {
 
     return (
         <Container>
-            {selectedEmployee && (
-                <div className='d-flex justify-content-end mb-3'>
-                    <Button variant='danger' onClick={handleDelete}>
-                        Удалить сотрудника {selectedEmployee.name}
-                    </Button>
-                </div>
-            )}
-
             <Alert variant={selectedEmployee ? 'info' : 'warning'} className='mb-4'>
                 <h3 className='m-0'>{selectedEmployee?.name || 'Выберите сотрудника'}</h3>
             </Alert>

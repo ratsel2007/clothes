@@ -34,13 +34,18 @@ export class Employee extends Model {
     officerDate: Date;
 
     @Column({
-        type: DataType.JSONB,
+        type: DataType.DATEONLY,
         allowNull: true,
+        defaultValue: null,
     })
-    decree: {
-        date: Date;
-        duration: number;
-    } | null;
+    maternityLeaveStart: Date | null;
+
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+    })
+    maternityLeaveDuration: number;
 
     @Column({
         type: DataType.JSONB,
@@ -48,7 +53,7 @@ export class Employee extends Model {
     })
     staff: Array<{
         issuances: Array<{
-            date: Date;
+            date: string;
             quantity: number;
             used: number;
         }>;
