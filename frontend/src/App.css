@@ -1,6 +1,5 @@
 #root {
     max-width: 1920px;
-    margin: 0 auto;
     padding: 2rem;
 }
 
@@ -8,6 +7,7 @@
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
+    padding-top: 50px;
     margin-right: auto;
     margin-left: auto;
 }
@@ -21,9 +21,15 @@
     margin-right: 30px;
 }
 
-.period {
-    padding-bottom: 20px;
-    border-bottom: 1px solid black;
+header {
+    position: absolute;
+    top: 20px;
+    left: 50px;
+}
+
+.item {
+    border-top: 1px solid #000;
+    padding-top: 20px;
 }
 
 .red {

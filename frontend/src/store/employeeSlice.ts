@@ -8,9 +8,8 @@ export const fetchEmployees = createAsyncThunk('employees/fetchAll', async () =>
 });
 
 export const fetchEmployeeById = createAsyncThunk('employees/fetchOne', async (id: string) => {
-    const response = await employeeApi
-        .getAll()
-        .then((employees) => employees.find((employee: Employee) => employee.id === id));
+    const response = await employeeApi.getOne(id);
+    // .then((employees) => employees.find((employee: Employee) => employee.id === id));
     return response;
 });
 

@@ -3,7 +3,12 @@ import {Form, Button} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import {CreateEmployeeModal} from './employee/CreateEmployeeModal';
 import {RootState} from '../store/store';
-import {fetchEmployees, setSelectedEmployee, deleteEmployee} from '../store/employeeSlice';
+import {
+    fetchEmployees,
+    setSelectedEmployee,
+    deleteEmployee,
+    fetchEmployeeById,
+} from '../store/employeeSlice';
 
 export const Header = () => {
     const dispatch = useDispatch();
@@ -26,7 +31,13 @@ export const Header = () => {
             <div className='d-flex gap-3 align-items-center pb-4'>
                 <Form.Select
                     value={selectedEmployee?.id || ''}
-                    onChange={(e) => dispatch(setSelectedEmployee(e.target.value))}
+                    onChange={(e) => {
+                        if (e.target.value) {
+                            dispatch(fetchEmployeeById(e.target.value) as any);
+                        } else {
+                            dispatch(setSelectedEmployee(''));
+                        }
+                    }}
                     style={{width: 'auto'}}>
                     <option value=''>Выбрать сотрудника</option>
                     {employees.map((employee: any) => (

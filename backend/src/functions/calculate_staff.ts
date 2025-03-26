@@ -187,8 +187,9 @@ function calculateEquipmentDates(
 
         // Проверяем, истек ли срок предыдущей выдачи
         if (lastIssuanceDate) {
+            // Use the same item data source for previous period check
             const prevPeriod = findApplicablePeriod(
-                isOfficer ? nonOfficerItem || officerItem : nonOfficerItem,
+                currentItem, // Changed from: isOfficer ? nonOfficerItem || officerItem : nonOfficerItem
                 lastIssuanceDate
             );
             if (

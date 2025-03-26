@@ -7,7 +7,7 @@ interface ItemProps {
 
 export const Item = ({staff}: ItemProps) => {
     return (
-        <div>
+        <div className='item'>
             <h3>
                 {staff.name} | {staff.totalQuantity} | {staff.totalQuantity * (staff.cash || 0)} ₽
             </h3>

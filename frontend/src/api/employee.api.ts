@@ -14,6 +14,11 @@ export const employeeApi = {
         return response.data;
     },
 
+    getOne: async (id: string) => {
+        const response = await axios.get<any[]>(`${API_URL}/employee/${id}`);
+        return response.data;
+    },
+
     deleteById: async (id: string) => {
         const response = await axios.delete(`${API_URL}/employee/${id}`);
         return response.data;

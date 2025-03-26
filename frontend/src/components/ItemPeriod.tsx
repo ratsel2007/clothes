@@ -15,8 +15,19 @@ export const ItemPeriod = ({period, staffName, periodIndex}: ItemPeriodProps) =>
     const selectedEmployee = useSelector((state: RootState) => state.employees.selectedEmployee);
     const loading = useSelector((state: RootState) => state.employees.loading);
 
+    if (period.quantity === 0) {
+        return null;
+    }
+
     const handleQuantityChange = async (increment: boolean) => {
         if (!selectedEmployee) return;
+
+        // Calculate new values
+        const newQuantity = period.quantity + (increment ? -1 : 1);
+        const newUsed = period.used + (increment ? 1 : -1);
+
+        // Validate new values
+        if (newQuantity < 0 || newUsed < 0) return;
 
         const updatedEmployee = {
             ...selectedEmployee,
@@ -29,8 +40,8 @@ export const ItemPeriod = ({period, staffName, periodIndex}: ItemPeriodProps) =>
                             if (i === periodIndex) {
                                 return {
                                     ...issuance,
-                                    quantity: issuance.quantity + (increment ? -1 : 1),
-                                    used: issuance.used + (increment ? 1 : -1),
+                                    quantity: newQuantity,
+                                    used: newUsed,
                                 };
                             }
                             return issuance;
