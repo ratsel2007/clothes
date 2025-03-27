@@ -1,21 +1,21 @@
 import axios from 'axios';
 import {Employee} from '../types/employee.types';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'http://localhost:8000';
 
 export const employeeApi = {
     create: async (employeeData: any) => {
-        const response = await axios.post(`${API_URL}/employee/create`, employeeData);
+        const response = await axios.post(`${API_URL}/employees/`, employeeData);
         return response.data;
     },
 
     getAll: async () => {
-        const response = await axios.get<any[]>(`${API_URL}/employee`);
+        const response = await axios.get<any[]>(`${API_URL}/employees/`);
         return response.data;
     },
 
     getOne: async (id: string) => {
-        const response = await axios.get<any[]>(`${API_URL}/employee/${id}`);
+        const response = await axios.get<any[]>(`${API_URL}/employees/${id}`);
         return response.data;
     },
 

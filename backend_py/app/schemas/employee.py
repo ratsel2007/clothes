@@ -17,20 +17,17 @@ class StaffItem(BaseModel):
     total_quantity: int
     cash: float
 
-class EmployeeBase(BaseModel):
+class EmployeeCreate(BaseModel):
     name: str
     gender: Gender
     start_date: date
     officer_date: date
     maternity_leave_start: Optional[date] = None
     maternity_leave_duration: Optional[int] = 0
-    staff: List[StaffItem]
 
-class EmployeeCreate(EmployeeBase):
-    pass
-
-class Employee(EmployeeBase):
+class Employee(EmployeeCreate):
     id: UUID4
+    staff: List[StaffItem]
 
     class Config:
         from_attributes = True

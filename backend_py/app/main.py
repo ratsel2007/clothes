@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db, Base, engine  # Added Base and engine
@@ -7,6 +8,15 @@ from app.schemas import employee as schemas
 from app.services.employee_service import calculate_staff_for_employee
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
