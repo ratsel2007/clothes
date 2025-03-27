@@ -1,141 +1,101 @@
-const fs = require('fs');
-const path = require('path');
+import dayjs, {Dayjs} from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import 'dayjs/locale/ru';
+import {EquipmentItem, Period} from 'src/types/equipment';
 
-const officerData = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '..', 'data', 'officer_data.json'), 'utf8')
-);
-const nonOfficerData = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '..', 'data', 'non_officer_data.json'), 'utf8')
-);
+// Импорт данных
+const nonOfficerData: EquipmentItem[] = require('../data/non_officer_data.json');
+const officerData: EquipmentItem[] = require('../data/officer_data.json');
+const womanNonOfficerData: EquipmentItem[] = require('../data/woman_non_officer_data.json');
+const womanOfficerData: EquipmentItem[] = require('../data/woman_officer_data.json');
 
-/**
- * Add new data files
- */
-const womanOfficerData = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '..', 'data', 'woman_officer_data.json'), 'utf8')
-);
-const womanNonOfficerData = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '..', 'data', 'woman_non_officer_data.json'), 'utf8')
-);
+// Инициализация dayjs
+dayjs.extend(customParseFormat);
+dayjs.locale('ru');
 
 /**
- * Преобразует строку даты из формата DD.MM.YYYY в объект Date
- * @param {string} dateStr - Дата в формате DD.MM.YYYY
- * @returns {Date|null} - Объект Date или null, если дата не указана
+ * Преобразует строку даты в объект Dayjs
  */
-function parseDate(dateStr) {
-    if (!dateStr) return null;
-    const [day, month, year] = dateStr.split('.').map(Number);
-    return new Date(year, month - 1, day);
+function parseDate(date: string | Date): Dayjs {
+    if (date instanceof Date) {
+        return dayjs(date);
+    }
+    const parsedDate = dayjs(date, 'DD.MM.YYYY');
+    if (!parsedDate.isValid()) {
+        console.error('Некорректная дата:', date);
+        throw new Error(`Некорректная дата: ${date}`);
+    }
+    return parsedDate;
 }
 
 /**
- * Форматирует объект Date в строку формата DD.MM.YYYY
- * @param {Date} date - Объект даты
- * @returns {string} - Отформатированная дата
+ * Форматирует дату в строку
  */
-function formatDate(date) {
-    return date
-        .toLocaleDateString('ru-RU', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        })
-        .replace(/\./g, '.');
+function formatDate(date: Dayjs | Date): string {
+    return dayjs(date).format('DD.MM.YYYY');
 }
 
 /**
- * Находит применимый период для указанной даты в данных об имуществе
- * @param {Object} data - Данные об имуществе
- * @param {Date} date - Дата для поиска периода
- * @returns {Object|null} - Найденный период или null
+ * Находит применимый период для даты выдачи
+ * @param item - Предмет обмундирования
+ * @param issueDate - Дата выдачи
+ * @returns Период выдачи или null, если период не найден
  */
-function findApplicablePeriod(data, date) {
-    return data.periods.find((period) => {
-        const periodStart = period.start_date ? parseDate(period.start_date) : new Date(0);
-        const periodEnd = period.end_date ? parseDate(period.end_date) : new Date(9999, 11, 31);
-        return date >= periodStart && date <= periodEnd;
+function findApplicablePeriod(
+    item: EquipmentItem | undefined,
+    issueDate: Dayjs | Date
+): Period | null {
+    if (!item) return null;
+
+    console.log('Периоды предмета:', item.periods);
+    console.log('Поиск периода для даты:', formatDate(issueDate), 'в предмете:', item.item_name);
+
+    const period = item.periods.find((period) => {
+        const startDate = period.start_date ? parseDate(period.start_date) : dayjs('1970-01-01');
+        const endDate = period.end_date ? parseDate(period.end_date) : dayjs('2100-01-01');
+        const issueDateTime = dayjs(issueDate);
+
+        const isInPeriod =
+            (issueDateTime.isAfter(startDate) || issueDateTime.isSame(startDate)) &&
+            (issueDateTime.isBefore(endDate) || issueDateTime.isSame(endDate));
+
+        console.log('Проверка периода:', {
+            periodStart: formatDate(startDate),
+            periodEnd: formatDate(endDate),
+            isInPeriod,
+        });
+
+        return isInPeriod;
     });
+
+    console.log('Найденный период:', period);
+    return period;
 }
 
-/**
- * Проверяет, истек ли срок предыдущей выдачи
- * @param {Date} lastIssueDate - Дата последней выдачи
- * @param {number} periodMonths - Период в месяцах
- * @param {Date} currentDate - Текущая дата
- * @returns {boolean} - true если срок истек
- */
-function isPreviousIssuanceExpired(
-    lastIssueDate,
-    periodMonths,
-    currentDate,
-    maternityStart,
-    maternityLeaveDuration
+export function calculateEquipmentDates(
+    startWorkDate: string,
+    officerPromotionDate: string,
+    itemName: string,
+    gender: 'male' | 'female',
+    maternityLeaveStart: string | null = null,
+    maternityLeaveDuration: number = 0
 ) {
-    if (!lastIssueDate) return true;
-    const expirationDate = new Date(lastIssueDate);
+    console.log('Начало расчета выдачи для:', {
+        startWorkDate,
+        officerPromotionDate,
+        itemName,
+        gender,
+    });
 
-    // Calculate base expiration
-    expirationDate.setMonth(expirationDate.getMonth() + periodMonths);
-
-    // If maternity leave starts during the wearing period, extend it
-    if (maternityStart && lastIssueDate <= maternityStart && maternityStart <= expirationDate) {
-        expirationDate.setMonth(expirationDate.getMonth() + maternityLeaveDuration);
-    }
-
-    return currentDate >= expirationDate;
-}
-
-/**
- * Определяет дату первой возможной выдачи предмета
- * @param {Object} item - Данные о предмете
- * @param {Date} workStartDate - Дата начала работы
- * @param {Date} promotionDate - Дата получения звания офицера
- * @param {boolean} isOfficerOnly - Предмет доступен только офицерам
- * @returns {Date} - Дата первой возможной выдачи
- */
-function determineFirstAvailableDate(item, workStartDate, promotionDate, isOfficerOnly) {
-    // Находим самый ранний период, в котором предмет стал доступен
-    const firstPeriod = item.periods[0];
-    const periodStartDate = firstPeriod.start_date
-        ? parseDate(firstPeriod.start_date)
-        : new Date(0);
-
-    // Для предметов, доступных только офицерам
-    if (isOfficerOnly) {
-        // Выдача не раньше даты получения звания офицера
-        const earliestDate = promotionDate > periodStartDate ? promotionDate : periodStartDate;
-        return earliestDate > workStartDate ? earliestDate : workStartDate;
-    }
-
-    // Для обычных предметов
-    return periodStartDate > workStartDate ? periodStartDate : workStartDate;
-}
-
-/**
- * Рассчитывает даты выдачи имущества с учетом статуса офицера
- * @param {string} startWorkDate - Дата начала работы
- * @param {string} officerPromotionDate - Дата получения звания офицера
- * @param {string} itemName - Наименование имущества
- * @returns {Object} - Объект с датами выдачи и количеством
- */
-function calculateEquipmentDates(
-    startWorkDate,
-    officerPromotionDate,
-    itemName,
-    gender,
-    maternityLeaveStart = null,
-    maternityLeaveDuration = 0
-) {
     const workStartDate = parseDate(startWorkDate);
     const promotionDate = parseDate(officerPromotionDate);
     const maternityStart = maternityLeaveStart ? parseDate(maternityLeaveStart) : null;
-    const currentDate = new Date();
+    const currentDate = dayjs();
 
     const issuances = [];
     let totalQuantity = 0;
 
-    // Select data based on gender
+    // Выбор данных в зависимости от пола
     const nonOfficerItem =
         gender === 'female'
             ? womanNonOfficerData.find((item) => item.item_name === itemName)
@@ -146,70 +106,100 @@ function calculateEquipmentDates(
             ? womanOfficerData.find((item) => item.item_name === itemName)
             : officerData.find((item) => item.item_name === itemName);
 
-    if (!nonOfficerItem && !officerItem) return {issuances: [], totalQuantity: 0};
+    console.log('Найденные предметы:', {
+        nonOfficerItem: nonOfficerItem?.item_name,
+        officerItem: officerItem?.item_name,
+    });
 
-    // Определяем, доступен ли предмет только офицерам
-    const isOfficerOnly = !nonOfficerItem && officerItem;
+    if (!nonOfficerItem && !officerItem) {
+        return {issuances: [], totalQuantity: 0};
+    }
 
     // Определяем начальную дату выдачи
-    let currentIssueDate;
-    if (isOfficerOnly) {
-        // Для предметов только для офицеров
-        currentIssueDate = determineFirstAvailableDate(
-            officerItem,
-            workStartDate,
-            promotionDate,
-            true
-        );
-    } else {
-        // Для обычных предметов
-        const relevantItem = nonOfficerItem || officerItem;
-        currentIssueDate = determineFirstAvailableDate(
-            relevantItem,
-            workStartDate,
-            promotionDate,
-            false
-        );
-    }
+    let currentIssueDate = determineFirstAvailableDate(
+        nonOfficerItem || officerItem,
+        workStartDate,
+        promotionDate,
+        !nonOfficerItem && !!officerItem
+    );
+
+    console.log('Начальная дата выдачи:', {
+        currentIssueDate: formatDate(currentIssueDate),
+        workStartDate: formatDate(workStartDate),
+        promotionDate: formatDate(promotionDate),
+    });
 
     let lastIssuanceDate = null;
 
-    while (currentIssueDate <= currentDate) {
-        // Определяем, какой набор данных использовать
-        const isOfficer = currentIssueDate >= promotionDate;
+    while (currentIssueDate.isBefore(currentDate) || currentIssueDate.isSame(currentDate)) {
+        const isOfficer =
+            currentIssueDate.isAfter(promotionDate) || currentIssueDate.isSame(promotionDate);
         const currentItem = isOfficer ? officerItem : nonOfficerItem;
 
-        if (!currentItem) break;
+        console.log('Итерация цикла:', {
+            currentIssueDate: formatDate(currentIssueDate),
+            isOfficer,
+            hasItem: !!currentItem,
+            itemName: currentItem?.item_name,
+        });
 
-        // Находим применимый период
+        if (!currentItem) {
+            console.log('Прерывание: нет текущего предмета');
+            break;
+        }
+
         const applicablePeriod = findApplicablePeriod(currentItem, currentIssueDate);
-        if (!applicablePeriod) break;
+        console.log('Найденный период:', applicablePeriod);
 
-        // Проверяем, истек ли срок предыдущей выдачи
-        if (lastIssuanceDate) {
-            // Use the same item data source for previous period check
-            const prevPeriod = findApplicablePeriod(
-                currentItem, // Changed from: isOfficer ? nonOfficerItem || officerItem : nonOfficerItem
-                lastIssuanceDate
+        if (!applicablePeriod) {
+            console.log('Прерывание: не найден применимый период');
+            break;
+        }
+
+        // Проверка переходного периода
+        if (lastIssuanceDate && !isOfficer) {
+            const nextIssueDate = dayjs(lastIssuanceDate).add(
+                applicablePeriod.period_months,
+                'month'
             );
-            if (
-                prevPeriod &&
-                !isPreviousIssuanceExpired(
-                    lastIssuanceDate,
-                    prevPeriod.period_months,
-                    currentIssueDate,
-                    maternityStart,
-                    maternityLeaveDuration
-                )
-            ) {
-                // Если срок не истек, переходим к следующей дате
-                currentIssueDate = new Date(lastIssuanceDate);
-                currentIssueDate.setMonth(currentIssueDate.getMonth() + prevPeriod.period_months);
+
+            console.log('Проверка переходного периода:', {
+                lastIssueDate: formatDate(lastIssuanceDate),
+                nextIssueDate: formatDate(nextIssueDate),
+                promotionDate: formatDate(promotionDate),
+                isAfterPromotion: nextIssueDate.isAfter(promotionDate),
+                currentItem: currentItem.item_name,
+                period_months: applicablePeriod.period_months,
+            });
+
+            // Если срок следующей выдачи заходит за дату присвоения звания,
+            // нужно доносить текущий предмет до конца срока
+            if (nextIssueDate.isAfter(promotionDate)) {
+                if (nextIssueDate.isAfter(currentDate)) {
+                    break;
+                }
+                // Следующая выдача будет по офицерской норме после окончания срока носки
+                currentIssueDate = nextIssueDate;
                 continue;
             }
         }
 
-        // Добавляем выдачу
+        // Проверка срока предыдущей выдачи
+        if (
+            lastIssuanceDate &&
+            !isPreviousIssuanceExpired(
+                lastIssuanceDate,
+                applicablePeriod.period_months,
+                currentIssueDate,
+                maternityStart,
+                maternityLeaveDuration
+            )
+        ) {
+            currentIssueDate = dayjs(lastIssuanceDate).add(applicablePeriod.period_months, 'month');
+            continue;
+        }
+
+        // Добавление выдачи
         issuances.push({
             date: formatDate(currentIssueDate),
             quantity: applicablePeriod.quantity,
@@ -217,63 +207,48 @@ function calculateEquipmentDates(
         });
         totalQuantity += applicablePeriod.quantity;
 
-        // Обновляем данные для следующей итерации
-        lastIssuanceDate = new Date(currentIssueDate);
-        currentIssueDate = new Date(currentIssueDate);
-        currentIssueDate.setMonth(currentIssueDate.getMonth() + applicablePeriod.period_months);
+        lastIssuanceDate = currentIssueDate;
+        currentIssueDate = currentIssueDate.add(applicablePeriod.period_months, 'month');
 
-        // Check if maternity leave affects this issuance period
+        // Учет декретного отпуска
         if (maternityStart && gender === 'female') {
-            const issuanceEndDate = new Date(currentIssueDate);
-            issuanceEndDate.setMonth(issuanceEndDate.getMonth() + applicablePeriod.period_months);
-
-            // If maternity leave overlaps with the wearing period
-            if (currentIssueDate <= maternityStart && maternityStart <= issuanceEndDate) {
-                // Extend the next issuance date by maternity leave duration
-                currentIssueDate.setMonth(currentIssueDate.getMonth() + maternityLeaveDuration);
+            if (
+                currentIssueDate.isBefore(maternityStart) &&
+                currentIssueDate
+                    .add(applicablePeriod.period_months, 'month')
+                    .isAfter(maternityStart)
+            ) {
+                currentIssueDate = currentIssueDate.add(maternityLeaveDuration, 'month');
             }
         }
     }
 
-    // Get the cash value from the appropriate item
-    const cash = isOfficerOnly ? officerItem.cash : nonOfficerItem?.cash || officerItem?.cash;
+    console.log('Результат расчета:', {
+        itemName,
+        totalQuantity,
+        issuancesCount: issuances.length,
+    });
 
-    return {issuances, totalQuantity, cash};
+    return {
+        issuances,
+        totalQuantity,
+    };
 }
 
 /**
- * Форматирует дату в строку формата DD.MM.YYYY
- * @param {Date} date - Дата для форматирования
- * @returns {string} - Дата в формате DD.MM.YYYY
+ * Обрабатывает все предметы для сотрудника
  */
-function formatDateToDDMMYYYY(date: Date | string): string {
-    if (!date) return null;
-
-    // Convert to Date object if it's a string
-    const dateObject = date instanceof Date ? date : new Date(date);
-
-    // Check if date is valid
-    if (isNaN(dateObject.getTime())) return null;
-
-    return dateObject.toLocaleDateString('ru-RU', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    });
-}
-
 export function processEquipment(
     startWorkDate: Date | string,
     officerPromotionDate: Date | string,
     gender: 'male' | 'female',
-    maternityLeaveStart: Date | string | null,
-    maternityLeaveDuration: number
+    maternityLeaveStart: Date | string | null = null,
+    maternityLeaveDuration: number = 0
 ) {
-    // Format dates to DD.MM.YYYY string format first
-    const formattedStartDate = formatDateToDDMMYYYY(startWorkDate);
-    const formattedOfficerDate = formatDateToDDMMYYYY(officerPromotionDate);
+    const formattedStartDate = formatDate(dayjs(startWorkDate));
+    const formattedOfficerDate = formatDate(dayjs(officerPromotionDate));
     const formattedMaternityDate = maternityLeaveStart
-        ? formatDateToDDMMYYYY(maternityLeaveStart)
+        ? formatDate(dayjs(maternityLeaveStart))
         : null;
 
     const allItems = new Set([
@@ -283,22 +258,78 @@ export function processEquipment(
         ),
     ]);
 
-    const result = Array.from(allItems).map((itemName) => {
+    return Array.from(allItems).map((itemName) => {
         const itemResult = calculateEquipmentDates(
             formattedStartDate,
             formattedOfficerDate,
             itemName,
             gender,
             formattedMaternityDate,
-            maternityLeaveDuration || 0
+            maternityLeaveDuration
         );
+
+        // Получаем информацию о денежной компенсации
+        const officerItem = (gender === 'female' ? womanOfficerData : officerData).find(
+            (item) => item.item_name === itemName
+        );
+        const nonOfficerItem = (gender === 'female' ? womanNonOfficerData : nonOfficerData).find(
+            (item) => item.item_name === itemName
+        );
+        const cashValue = (officerItem || nonOfficerItem)?.cash || 0;
+
         return {
             name: itemName,
             issuances: itemResult.issuances,
             totalQuantity: itemResult.totalQuantity,
-            cash: itemResult.cash,
+            cash: cashValue,
         };
     });
+}
 
-    return result;
+/**
+ * Определяет дату первой возможной выдачи предмета
+ */
+function determineFirstAvailableDate(
+    item: EquipmentItem,
+    workStartDate: Dayjs,
+    promotionDate: Dayjs,
+    isOfficerOnly: boolean
+): Dayjs {
+    const firstPeriod = item.periods[0];
+    const periodStartDate = firstPeriod.start_date
+        ? parseDate(firstPeriod.start_date)
+        : dayjs('1970-01-01');
+
+    if (isOfficerOnly) {
+        const earliestDate = dayjs(promotionDate).isAfter(periodStartDate)
+            ? promotionDate
+            : periodStartDate;
+        return dayjs(earliestDate).isAfter(workStartDate) ? earliestDate : workStartDate;
+    }
+
+    return dayjs(periodStartDate).isAfter(workStartDate) ? periodStartDate : workStartDate;
+}
+
+/**
+ * Проверяет, истек ли срок предыдущей выдачи
+ */
+function isPreviousIssuanceExpired(
+    lastIssueDate: Dayjs,
+    periodMonths: number,
+    currentDate: Dayjs,
+    maternityStart: Dayjs | null,
+    maternityLeaveDuration: number
+): boolean {
+    if (!lastIssueDate) return true;
+    let expirationDate = dayjs(lastIssueDate).add(periodMonths, 'month');
+
+    if (
+        maternityStart &&
+        dayjs(lastIssueDate).isBefore(maternityStart) &&
+        dayjs(maternityStart).isBefore(expirationDate)
+    ) {
+        expirationDate = expirationDate.add(maternityLeaveDuration, 'month');
+    }
+
+    return dayjs(currentDate).isAfter(expirationDate) || dayjs(currentDate).isSame(expirationDate);
 }

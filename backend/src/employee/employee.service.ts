@@ -16,13 +16,10 @@ export class EmployeeService {
     }
 
     async create(employee: Employee): Promise<Employee> {
-        console.log(employee);
         // Validate input data
         if (!employee.name || !employee.gender || !employee.startDate || !employee.officerDate) {
             throw new ConflictException('Пожалуйста, заполните все обязательные поля');
         }
-
-        // Validate date format
 
         // Check if employee with same name exists
         const existingEmployee = await this.employeeModel.findOne({
@@ -37,7 +34,7 @@ export class EmployeeService {
             employee.startDate,
             employee.officerDate,
             employee.gender,
-            employee.maternityLeaveStart,
+            employee.maternityLeaveStart || null,
             employee.maternityLeaveDuration || 0
         );
 
