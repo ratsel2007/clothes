@@ -48,15 +48,14 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
 
         try {
             await employeeApi.create({
-                ...formData,
-                startDate: new Date(formData.startDate).toISOString(),
-                officerDate: new Date(formData.officerDate).toISOString(),
-                maternityLeaveStart: formData.maternityLeaveStart
-                    ? new Date(formData.maternityLeaveStart).toISOString()
-                    : null,
-                maternityLeaveDuration: formData.maternityLeaveDuration
+                name: formData.name,
+                gender: formData.gender.toLowerCase(), // ensure 'male' or 'female'
+                start_date: formData.startDate, // YYYY-MM-DD format from date input
+                officer_date: formData.officerDate, // YYYY-MM-DD format from date input
+                maternity_leave_start: formData.maternityLeaveStart || null, // YYYY-MM-DD or null
+                maternity_leave_duration: formData.maternityLeaveDuration
                     ? parseInt(formData.maternityLeaveDuration)
-                    : null,
+                    : 0,
             });
             onClose();
             setFormData({

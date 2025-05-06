@@ -35,9 +35,12 @@ def create_employee(employee: schemas.EmployeeCreate, db: Session = Depends(get_
         maternity_leave_start=employee.maternity_leave_start,
         maternity_leave_duration=employee.maternity_leave_duration or 0
     )
+
+    print(staff_data)
     
     # Create employee with calculated staff
     employee_data = employee.dict()
+    # Ensure staff_data is properly serialized
     employee_data['staff'] = staff_data
     
     db_employee = models.Employee(**employee_data)

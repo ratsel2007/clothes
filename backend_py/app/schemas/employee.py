@@ -13,6 +13,7 @@ class Issuance(BaseModel):
     used: int
 
 class StaffItem(BaseModel):
+    name: str
     issuances: List[Issuance]
     total_quantity: int
     cash: float

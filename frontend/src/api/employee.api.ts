@@ -20,12 +20,14 @@ export const employeeApi = {
     },
 
     deleteById: async (id: string) => {
-        const response = await axios.delete(`${API_URL}/employee/${id}`);
+        // Fixed: changed from /employee/ to /employees/
+        const response = await axios.delete(`${API_URL}/employees/${id}`);
         return response.data;
     },
 
     updateEmployee: async (employee: Employee) => {
-        const response = await axios.put<Employee>(`${API_URL}/employee/${employee.id}`, employee);
+        // Fixed: changed from /employee/ to /employees/
+        const response = await axios.put<Employee>(`${API_URL}/employees/${employee.id}`, employee);
         return response.data;
     },
 };

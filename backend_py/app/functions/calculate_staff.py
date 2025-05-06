@@ -30,7 +30,22 @@ def load_data() -> tuple[List[EquipmentItem], ...]:
     def load_json(filename: str) -> List[EquipmentItem]:
         with open(data_dir / filename, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            return [EquipmentItem(**item) for item in data]
+            return [
+                EquipmentItem(
+                    item_name=item['item_name'],
+                    periods=[
+                        Period(
+                            start_date=period.get('start_date'),
+                            end_date=period.get('end_date'),
+                            period_months=period['period_months'],
+                            quantity=period['quantity']
+                        ) 
+                        for period in item['periods']
+                    ],
+                    cash=item.get('cash')
+                )
+                for item in data
+            ]
 
     return (
         load_json('non_officer_data.json'),
