@@ -2,18 +2,18 @@ import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import {employeeApi} from '../api/employee.api';
 import {Employee} from '../types/employee.types';
 
-export const fetchEmployees = createAsyncThunk('employees/fetchAll', async () => {
+export const fetchEmployees = createAsyncThunk('employee/fetchAll', async () => {
     const response = await employeeApi.getAll();
     return response || [];
 });
 
-export const fetchEmployeeById = createAsyncThunk('employees/fetchOne', async (id: string) => {
+export const fetchEmployeeById = createAsyncThunk('employee/fetchOne', async (id: string) => {
     const response = await employeeApi.getOne(id);
     // .then((employees) => employees.find((employee: Employee) => employee.id === id));
     return response;
 });
 
-export const deleteEmployee = createAsyncThunk('employees/delete', async (id: string) => {
+export const deleteEmployee = createAsyncThunk('employee/delete', async (id: string) => {
     await employeeApi.deleteById(id);
     return id;
 });

@@ -30,13 +30,14 @@ interface EquipmentItem {
 interface Issuance {
     date: string;
     quantity: number;
+    used: number;
     period_months: number;
 }
 
 interface ResultItem {
-    item_name: string;
+    name: string;
     issuances: Issuance[];
-    total_quantity: number;
+    totalQuantity: number;
     cash: number;
 }
 
@@ -56,15 +57,13 @@ export function calculateEquipment(
         // Load data based on gender
         const dataFileName = gender === 'male' ? 'men_data.json' : 'woman_data.json';
         const dataPath = path.join(__dirname, '..', 'data', dataFileName);
-        // console.log('Loading data from:', dataPath);
         
         const equipmentData: EquipmentItem[] = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-        // console.log('Loaded items:', equipmentData);
 
         const result: ResultItem[] = [];
 
         for (const item of equipmentData) {
-            console.log('Processing item:', item.item_name);
+            // console.log('Processing item:', item.item_name);
             const issuances: Issuance[] = [];
             let currentIssueDate = employeeStartDate;
             let totalQuantity = 0;
@@ -80,7 +79,8 @@ export function calculateEquipment(
                         }
 
                         const isOfficer = employeeOfficerDate && 
-                            currentIssueDate.isAfter(employeeOfficerDate);
+                            (startDate === officerDate || 
+                            currentIssueDate.isAfter(employeeOfficerDate));
 
                         const rules = isOfficer ? period.isOfficer : period.nonOfficer;
                         
@@ -100,6 +100,7 @@ export function calculateEquipment(
                             issuances.push({
                                 date: currentIssueDate.format('DD-MM-YYYY'),
                                 quantity: rules.quantity,
+                                used: 0,
                                 period_months: adjustedPeriodMonths
                             });
 
@@ -117,19 +118,21 @@ export function calculateEquipment(
 
             if (issuances.length > 0) {
                 result.push({
-                    item_name: item.item_name,
+                    name: item.item_name,
                     issuances,
-                    total_quantity: totalQuantity,
+                    totalQuantity: totalQuantity,
                     cash: item.cash
                 });
             }
         }
 
+
         // Save result to file with absolute path
         // const resultPath = path.resolve(__dirname, 'result.json');
         // console.log('Saving to:', resultPath);
         // fs.writeFileSync(resultPath, JSON.stringify(result, null, 2), 'utf8');
-
+        console.log('Calculation completed successfully');
+        // console.log(result);
         return result;
     } catch (error) {
         console.error('Error in calculation:', error);
@@ -141,7 +144,7 @@ export function calculateEquipment(
 // if (require.main === module) {
 //     try {
 //         console.log('Starting calculation...');
-//         calculateEquipment('female', "20.06.2018", "20.08.2022", "20.09.2020", 18);
+//         calculateEquipment('male', "2018-05-05", "2018-05-05");
 //         console.log('Calculation completed successfully');
 //     } catch (error) {
 //         console.error('Error during calculation:', error);

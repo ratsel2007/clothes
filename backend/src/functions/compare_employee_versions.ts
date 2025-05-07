@@ -1,12 +1,13 @@
 import {Employee} from '../employee/models/employee.model';
-import {processEquipment} from './calculate_staff';
+import {calculateEquipment} from './calculate';
+import { formatDateToDDMMYYYY } from './formatDate';
 
 export function compareAndUpdateEmployeeVersions(existingEmployee: Employee) {
     // Create new version with recalculated staff data
-    const newStaffData = processEquipment(
-        existingEmployee.startDate,
-        existingEmployee.officerDate,
+    const newStaffData = calculateEquipment(
         existingEmployee.gender,
+        existingEmployee.startDate,
+        existingEmployee.officerDate,        
         existingEmployee.maternityLeaveStart,
         existingEmployee.maternityLeaveDuration || 0
     );

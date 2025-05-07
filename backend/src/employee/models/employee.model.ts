@@ -22,23 +22,23 @@ export class Employee extends Model {
     gender: 'male' | 'female';
 
     @Column({
-        type: DataType.DATEONLY,
+        type: DataType.STRING,
         allowNull: false,
     })
-    startDate: Date;
+    startDate: string;
 
     @Column({
-        type: DataType.DATEONLY,
+        type: DataType.STRING,
         allowNull: false,
     })
-    officerDate: Date;
+    officerDate: string;
 
     @Column({
-        type: DataType.DATEONLY,
+        type: DataType.STRING,
         allowNull: true,
         defaultValue: null,
     })
-    maternityLeaveStart: Date | null;
+    maternityLeaveStart: string | null;
 
     @Column({
         type: DataType.INTEGER,

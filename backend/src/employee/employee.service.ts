@@ -1,8 +1,9 @@
 import {Injectable, ConflictException, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {Employee} from './models/employee.model';
-import {processEquipment} from '../functions/calculate_staff';
+import {calculateEquipment} from '../functions/calculate';
 import {compareAndUpdateEmployeeVersions} from '../functions/compare_employee_versions';
+import { formatDateToDDMMYYYY } from 'src/functions/formatDate';
 
 @Injectable()
 export class EmployeeService {
@@ -30,11 +31,16 @@ export class EmployeeService {
             throw new ConflictException(`Сотрудник с именем ${employee.name} уже существует`);
         }
 
-        const staffData = processEquipment(
-            employee.startDate,
-            employee.officerDate,
+        const startDate = formatDateToDDMMYYYY(employee.startDate);
+        const officerDate = formatDateToDDMMYYYY(employee.officerDate);
+        const maternityLeaveStart = employee.maternityLeaveStart ? formatDateToDDMMYYYY(employee.maternityLeaveStart) : null;
+  
+        
+        const staffData = calculateEquipment(
             employee.gender,
-            employee.maternityLeaveStart || null,
+            startDate,
+            officerDate,
+            maternityLeaveStart,
             employee.maternityLeaveDuration || 0
         );
 
@@ -56,12 +62,12 @@ export class EmployeeService {
             throw new NotFoundException(`Employee with ID ${id} not found`);
         }
 
-        const updatedStaff = compareAndUpdateEmployeeVersions(existingEmployee);
+        // const updatedStaff = compareAndUpdateEmployeeVersions(existingEmployee);
 
-        // Update employee if changes were made
-        if (JSON.stringify(existingEmployee.staff) !== JSON.stringify(updatedStaff)) {
-            await existingEmployee.update({staff: updatedStaff});
-        }
+        // // Update employee if changes were made
+        // if (JSON.stringify(existingEmployee.staff) !== JSON.stringify(updatedStaff)) {
+        //     await existingEmployee.update({staff: updatedStaff});
+        // }
 
         return existingEmployee;
     }

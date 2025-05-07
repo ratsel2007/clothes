@@ -168,78 +168,6 @@
         "cash": 168
     },
     {
-        "item_name": "Куртка зимняя/утепленная",
-        "periods": [
-            {
-                "start_date": "01.01.1990",
-                "end_date": "22.12.2006",
-                "nonOfficer": {
-                    "period_months": 72,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 60,
-                    "quantity": 1
-                }                 
-            },
-            {
-                "start_date": "23.12.2006",
-                "end_date": "10.02.2021",
-                "nonOfficer": {
-                    "period_months": 72,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 60,
-                    "quantity": 1
-                }  
-            },
-            {
-                "start_date": "11.02.2021",
-                "end_date": "01.01.2099",
-                "nonOfficer": {
-                    "period_months": 60,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 60,
-                    "quantity": 1
-                }  
-            }
-        ],        
-        "cash": 2435
-    },
-    {
-        "item_name": "Куртка демисезонная",
-        "periods": [
-            {
-                "start_date": "01.01.1990",
-                "end_date": "10.02.2021",
-                "nonOfficer": {
-                    "period_months": 1,
-                    "quantity": 0
-                },
-                "isOfficer": {
-                    "period_months": 1,
-                    "quantity": 0
-                }  
-            },
-            {
-                "start_date": "11.02.2021",
-                "end_date": "01.01.2099",
-                "nonOfficer": {
-                    "period_months": 72,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 72,
-                    "quantity": 1
-                } 
-            }
-        ],        
-        "cash": 1955
-    },
-    {
         "item_name": "Костюм зимний",
         "periods": [
             {
@@ -323,6 +251,78 @@
         ],        
         "cash": 1040
     },
+    {
+        "item_name": "Куртка зимняя/утепленная",
+        "periods": [
+            {
+                "start_date": "01.01.1990",
+                "end_date": "22.12.2006",
+                "nonOfficer": {
+                    "period_months": 72,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 60,
+                    "quantity": 1
+                }                 
+            },
+            {
+                "start_date": "23.12.2006",
+                "end_date": "10.02.2021",
+                "nonOfficer": {
+                    "period_months": 72,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 60,
+                    "quantity": 1
+                }  
+            },
+            {
+                "start_date": "11.02.2021",
+                "end_date": "01.01.2099",
+                "nonOfficer": {
+                    "period_months": 60,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 60,
+                    "quantity": 1
+                }  
+            }
+        ],        
+        "cash": 2435
+    },
+    {
+        "item_name": "Куртка демисезонная",
+        "periods": [
+            {
+                "start_date": "01.01.1990",
+                "end_date": "10.02.2021",
+                "nonOfficer": {
+                    "period_months": 1,
+                    "quantity": 0
+                },
+                "isOfficer": {
+                    "period_months": 1,
+                    "quantity": 0
+                }  
+            },
+            {
+                "start_date": "11.02.2021",
+                "end_date": "01.01.2099",
+                "nonOfficer": {
+                    "period_months": 72,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 72,
+                    "quantity": 1
+                } 
+            }
+        ],        
+        "cash": 1955
+    },   
     {
         "item_name": "Плащ-накидка",
         "periods": [
@@ -490,7 +490,7 @@
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 24,
+                    "period_months": 36,
                     "quantity": 1
                 } 
             },
@@ -502,7 +502,7 @@
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 24,
+                    "period_months": 36,
                     "quantity": 1
                 } 
             },
@@ -514,7 +514,7 @@
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 24,
+                    "period_months": 36,
                     "quantity": 1
                 } 
             }
@@ -732,7 +732,7 @@
         "cash": 54
     },
     {
-        "item_name": "Белье х/б",
+        "item_name": "Белье нательное",
         "periods": [
             {
                 "start_date": "01.01.1990",
@@ -942,120 +942,6 @@
         "cash": 37
     },
     {
-        "item_name": "Полуботинки",
-        "periods": [
-            {
-                "start_date": "01.01.1990",
-                "end_date": "22.12.2006",
-                "nonOfficer": {
-                    "period_months": 18,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 1
-                }
-            },
-            {
-                "start_date": "23.12.2006",
-                "end_date": "10.02.2021",
-                "nonOfficer": {
-                    "period_months": 18,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 1
-                }
-            },
-            {
-                "start_date": "11.02.2021",
-                "end_date": "01.01.2099",
-                "nonOfficer": {
-                    "period_months": 18,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 1
-                }
-            }
-        ],        
-        "cash": 1247
-    },
-    {
-        "item_name": "Ботинки с в/б",
-        "periods": [
-            {
-                "start_date": "01.01.1990",
-                "end_date": "22.12.2006",
-                "nonOfficer": {
-                    "period_months": 24,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
-                }
-            },
-            {
-                "start_date": "23.12.2006",
-                "end_date": "10.02.2021",
-                "nonOfficer": {
-                    "period_months": 12,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 24,
-                    "quantity": 1
-                }
-            },
-            {
-                "start_date": "11.02.2021",
-                "end_date": "01.01.2099",
-                "nonOfficer": {
-                    "period_months": 24,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 24,
-                    "quantity": 1
-                }
-            }
-        ],        
-        "cash": 1076
-    },
-    {
-        "item_name": "Ботинки с в/б облег",
-        "periods": [
-            {
-                "start_date": "01.01.1990",
-                "end_date": "10.02.2021",
-                "nonOfficer": {
-                    "period_months": 1,
-                    "quantity": 0
-                },
-                "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 0
-                }  
-            },
-            {
-                "start_date": "11.02.2021",
-                "end_date": "01.01.2099",
-                "nonOfficer": {
-                    "period_months": 24,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 0
-                }
-            }
-        ],        
-        "cash": 904
-    },
-    {
         "item_name": "Полусапоги",
         "periods": [
             {
@@ -1098,17 +984,17 @@
         "cash": 1272
     },
     {
-        "item_name": "Ремень поясной",
+        "item_name": "Полуботинки",
         "periods": [
             {
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 108,
+                    "period_months": 18,
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 120,
+                    "period_months": 12,
                     "quantity": 1
                 }
             },
@@ -1116,11 +1002,11 @@
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 120,
+                    "period_months": 18,
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 120,
+                    "period_months": 12,
                     "quantity": 1
                 }
             },
@@ -1128,17 +1014,89 @@
                 "start_date": "11.02.2021",
                 "end_date": "01.01.2099",
                 "nonOfficer": {
-                    "period_months": 120,
+                    "period_months": 18,
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 120,
+                    "period_months": 12,
                     "quantity": 1
                 }
             }
         ],        
-        "cash": 405
+        "cash": 1247
     },
+    {
+        "item_name": "Ботинки с в/б облег",
+        "periods": [
+            {
+                "start_date": "01.01.1990",
+                "end_date": "10.02.2021",
+                "nonOfficer": {
+                    "period_months": 1,
+                    "quantity": 0
+                },
+                "isOfficer": {
+                    "period_months": 12,
+                    "quantity": 0
+                }  
+            },
+            {
+                "start_date": "11.02.2021",
+                "end_date": "01.01.2099",
+                "nonOfficer": {
+                    "period_months": 24,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 12,
+                    "quantity": 0
+                }
+            }
+        ],        
+        "cash": 904
+    },
+    {
+        "item_name": "Ботинки с в/б",
+        "periods": [
+            {
+                "start_date": "01.01.1990",
+                "end_date": "22.12.2006",
+                "nonOfficer": {
+                    "period_months": 24,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 36,
+                    "quantity": 1
+                }
+            },
+            {
+                "start_date": "23.12.2006",
+                "end_date": "10.02.2021",
+                "nonOfficer": {
+                    "period_months": 12,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 24,
+                    "quantity": 1
+                }
+            },
+            {
+                "start_date": "11.02.2021",
+                "end_date": "01.01.2099",
+                "nonOfficer": {
+                    "period_months": 24,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 24,
+                    "quantity": 1
+                }
+            }
+        ],        
+        "cash": 1076
+    },  
     {
         "item_name": "Ремень брючный",
         "periods": [
@@ -1180,5 +1138,47 @@
             }
         ],        
         "cash": 144
-    }
+    },  
+    {
+        "item_name": "Ремень поясной",
+        "periods": [
+            {
+                "start_date": "01.01.1990",
+                "end_date": "22.12.2006",
+                "nonOfficer": {
+                    "period_months": 108,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 120,
+                    "quantity": 1
+                }
+            },
+            {
+                "start_date": "23.12.2006",
+                "end_date": "10.02.2021",
+                "nonOfficer": {
+                    "period_months": 120,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 120,
+                    "quantity": 1
+                }
+            },
+            {
+                "start_date": "11.02.2021",
+                "end_date": "01.01.2099",
+                "nonOfficer": {
+                    "period_months": 120,
+                    "quantity": 1
+                },
+                "isOfficer": {
+                    "period_months": 120,
+                    "quantity": 1
+                }
+            }
+        ],        
+        "cash": 405
+    }    
 ]

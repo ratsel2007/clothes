@@ -42,6 +42,11 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
         return !Object.values(newErrors).some((error) => error);
     };
 
+    const handleInputForm = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
+        setFormData({...formData, [name]: value});
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validateForm()) return;
@@ -50,10 +55,10 @@ export function CreateEmployeeModal({opened, onClose}: CreateEmployeeModalProps)
             await employeeApi.create({
                 name: formData.name,
                 gender: formData.gender.toLowerCase(), // ensure 'male' or 'female'
-                start_date: formData.startDate, // YYYY-MM-DD format from date input
-                officer_date: formData.officerDate, // YYYY-MM-DD format from date input
-                maternity_leave_start: formData.maternityLeaveStart || null, // YYYY-MM-DD or null
-                maternity_leave_duration: formData.maternityLeaveDuration
+                startDate: formData.startDate, // YYYY-MM-DD format from date input
+                officerDate: formData.officerDate, // YYYY-MM-DD format from date input
+                maternityLeaveStart: formData.maternityLeaveStart || null, // YYYY-MM-DD or null
+                maternityLeaveDuration: formData.maternityLeaveDuration
                     ? parseInt(formData.maternityLeaveDuration)
                     : 0,
             });
