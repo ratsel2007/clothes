@@ -43,12 +43,15 @@ interface ResultItem {
 export function calculateEquipment(
     gender: 'male' | 'female',
     startDate: string,
-    officerDate: string | null
+    officerDate: string | null,
+    maternityDate?: string,
+    maternityMonths?: number
 ) {
     try {
         const currentDate = dayjs('2025-05-06', 'YYYY-MM-DD');
         const employeeStartDate = dayjs(startDate, 'DD.MM.YYYY');
         const employeeOfficerDate = officerDate ? dayjs(officerDate, 'DD.MM.YYYY') : null;
+        const maternityStartDate = maternityDate ? dayjs(maternityDate, 'DD.MM.YYYY') : null;
 
         // Load data based on gender
         const dataFileName = gender === 'male' ? 'men_data.json' : 'woman_data.json';
@@ -72,8 +75,6 @@ export function calculateEquipment(
                     const periodEndDate = dayjs(period.end_date, 'DD.MM.YYYY');
 
                     if (currentIssueDate.isBetween(periodStartDate, periodEndDate, 'day', '[]')) {
-                        // If this is the first period and starts after employment date,
-                        // adjust currentIssueDate to period start date
                         if (period === item.periods[0] && periodStartDate.isAfter(employeeStartDate)) {
                             currentIssueDate = periodStartDate;
                         }
@@ -84,16 +85,29 @@ export function calculateEquipment(
                         const rules = isOfficer ? period.isOfficer : period.nonOfficer;
                         
                         if (rules.quantity > 0) {
+                            // Calculate adjusted period months considering maternity leave
+                            let adjustedPeriodMonths = rules.period_months;
+                            
+                            if (gender === 'female' && maternityStartDate && maternityMonths) {
+                                const issueEndDate = currentIssueDate.add(rules.period_months, 'month');
+                                
+                                // If maternity leave overlaps with current issuance period
+                                if (maternityStartDate.isBetween(currentIssueDate, issueEndDate, 'day', '[]')) {
+                                    adjustedPeriodMonths += maternityMonths;
+                                }
+                            }
+
                             issuances.push({
-                                date: currentIssueDate.format('DD-MM-YYYY'), 
+                                date: currentIssueDate.format('DD-MM-YYYY'),
                                 quantity: rules.quantity,
-                                period_months: rules.period_months
+                                period_months: adjustedPeriodMonths
                             });
 
                             totalQuantity += rules.quantity;
+                            currentIssueDate = currentIssueDate.add(adjustedPeriodMonths, 'month');
+                        } else {
+                            currentIssueDate = currentIssueDate.add(rules.period_months, 'month');
                         }
-                        
-                        currentIssueDate = currentIssueDate.add(rules.period_months, 'month');
                         break;
                     }
                 }
@@ -112,9 +126,9 @@ export function calculateEquipment(
         }
 
         // Save result to file with absolute path
-        const resultPath = path.resolve(__dirname, 'result.json');
-        console.log('Saving to:', resultPath);
-        fs.writeFileSync(resultPath, JSON.stringify(result, null, 2), 'utf8');
+        // const resultPath = path.resolve(__dirname, 'result.json');
+        // console.log('Saving to:', resultPath);
+        // fs.writeFileSync(resultPath, JSON.stringify(result, null, 2), 'utf8');
 
         return result;
     } catch (error) {
@@ -124,12 +138,12 @@ export function calculateEquipment(
 }
 
 // Modify the execution part
-if (require.main === module) {
-    try {
-        console.log('Starting calculation...');
-        calculateEquipment('female', "20.06.2018", "20.08.2022");
-        console.log('Calculation completed successfully');
-    } catch (error) {
-        console.error('Error during calculation:', error);
-    }
-}
+// if (require.main === module) {
+//     try {
+//         console.log('Starting calculation...');
+//         calculateEquipment('female', "20.06.2018", "20.08.2022", "20.09.2020", 18);
+//         console.log('Calculation completed successfully');
+//     } catch (error) {
+//         console.error('Error during calculation:', error);
+//     }
+// }

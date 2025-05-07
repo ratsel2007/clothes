@@ -48,11 +48,11 @@
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 48,
+                    "period_months": 24,
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 48,
+                    "period_months": 36,
                     "quantity": 1
                 } 
             },
@@ -90,7 +90,7 @@
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 24,
+                    "period_months": 36,
                     "quantity": 1
                 },
                 "isOfficer": {
@@ -132,11 +132,11 @@
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 48,
-                    "quantity": 1
+                    "period_months": 1,
+                    "quantity": 0
                 },
                 "isOfficer": {
-                    "period_months": 48,
+                    "period_months": 36,
                     "quantity": 1
                 } 
             },
@@ -144,11 +144,11 @@
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 48,
+                    "period_months": 36,
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 48,
+                    "period_months": 36,
                     "quantity": 1
                 } 
             },
@@ -156,11 +156,11 @@
                 "start_date": "11.02.2021",
                 "end_date": "01.01.2099",
                 "nonOfficer": {
-                    "period_months": 48,
+                    "period_months": 36,
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 48,
+                    "period_months": 36,
                     "quantity": 1
                 } 
             }
@@ -330,11 +330,11 @@
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 36,
+                    "period_months": 18,
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 24,
+                    "period_months": 18,
                     "quantity": 1
                 } 
             },
@@ -342,12 +342,12 @@
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 36,
+                    "period_months": 24,
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 36,
-                    "quantity": 2
+                    "period_months": 18,
+                    "quantity": 1
                 } 
             },
             {
@@ -384,25 +384,13 @@
                 "start_date": "11.02.2021",
                 "end_date": "01.01.2099",
                 "nonOfficer": {
-                    "period_months": 72,
-                    "quantity": 1
-                },
-                "isOfficer": {
-                    "period_months": 72,
-                    "quantity": 1
-                } 
-            },
-            {
-                "start_date": "11.02.2021",
-                "end_date": "01.01.1099",
-                "nonOfficer": {
                     "period_months": 1,
                     "quantity": 0
                 },
                 "isOfficer": {
                     "period_months": 60,
                     "quantity": 1
-                }
+                } 
             }
         ],
         "cash": 1269
@@ -415,11 +403,11 @@
                 "end_date": "22.12.2006",
                 "nonOfficer": {
                     "period_months": 36,
-                    "quantity": 1
+                    "quantity": 2
                 },
                 "isOfficer": {
-                    "period_months": 24,
-                    "quantity": 1
+                    "period_months": 36,
+                    "quantity": 2
                 } 
             },
             {
@@ -427,7 +415,7 @@
                 "end_date": "10.02.2021",
                 "nonOfficer": {
                     "period_months": 36,
-                    "quantity": 1
+                    "quantity": 2
                 },
                 "isOfficer": {
                     "period_months": 36,
@@ -439,11 +427,11 @@
                 "end_date": "01.01.2099",
                 "nonOfficer": {
                     "period_months": 36,
-                    "quantity": 1
+                    "quantity": 2
                 },
                 "isOfficer": {
                     "period_months": 36,
-                    "quantity": 1
+                    "quantity": 2
                 } 
             }
         ],  
@@ -460,7 +448,7 @@
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 24,
+                    "period_months": 36,
                     "quantity": 1
                 } 
             },
@@ -468,19 +456,19 @@
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 36,
+                    "period_months": 42,
                     "quantity": 1
                 },
                 "isOfficer": {
                     "period_months": 36,
-                    "quantity": 2
+                    "quantity": 1
                 } 
             },
             {
                 "start_date": "11.02.2021",
                 "end_date": "01.01.2099",
                 "nonOfficer": {
-                    "period_months": 36,
+                    "period_months": 42,
                     "quantity": 1
                 },
                 "isOfficer": {
@@ -502,7 +490,7 @@
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 24,
+                    "period_months": 36,
                     "quantity": 1
                 } 
             },
@@ -515,7 +503,7 @@
                 },
                 "isOfficer": {
                     "period_months": 36,
-                    "quantity": 2
+                    "quantity": 1
                 } 
             },
             {
@@ -534,7 +522,7 @@
         "cash": 1109
     },
     {
-        "item_name": "Рубашка",
+        "item_name": "Блузка",
         "periods": [
             {
                 "start_date": "01.01.1990",
@@ -575,17 +563,17 @@
         "cash": 388
     },
     {
-        "item_name": "Галстук",
+        "item_name": "Галстук-бант",
         "periods": [
             {
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 12,
+                    "quantity": 2
                 },
                 "isOfficer": {
-                    "period_months": 24,
+                    "period_months": 12,
                     "quantity": 1
                 } 
             },
@@ -593,11 +581,11 @@
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 12,
+                    "quantity": 2
                 },
                 "isOfficer": {
-                    "period_months": 36,
+                    "period_months": 12,
                     "quantity": 2
                 } 
             },
@@ -617,7 +605,7 @@
         "cash": 41
     },
     {
-        "item_name": "Закрепка для галстука",
+        "item_name": "Заколка для галстука",
         "periods": [
             {
                 "start_date": "01.01.1990",
@@ -665,23 +653,23 @@
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 1,
+                    "quantity": 0
                 },
                 "isOfficer": {
-                    "period_months": 24,
-                    "quantity": 1
+                    "period_months": 1,
+                    "quantity": 0
                 } 
             },
             {
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 60,
+                    "quantity": 2
                 },
                 "isOfficer": {
-                    "period_months": 36,
+                    "period_months": 60,
                     "quantity": 2
                 } 
             },
@@ -689,12 +677,12 @@
                 "start_date": "11.02.2021",
                 "end_date": "01.01.2099",
                 "nonOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 60,
+                    "quantity": 2
                 },
                 "isOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 60,
+                    "quantity": 2
                 } 
             }
         ],  
@@ -707,24 +695,24 @@
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 1,
+                    "quantity": 0
                 },
                 "isOfficer": {
-                    "period_months": 24,
-                    "quantity": 1
+                    "period_months": 1,
+                    "quantity": 0
                 } 
             },
             {
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 36,
+                    "period_months": 24,
                     "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 36,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 } 
             },
             {
@@ -749,23 +737,23 @@
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 12,
+                    "quantity": 2
                 },
                 "isOfficer": {
-                    "period_months": 24,
-                    "quantity": 1
+                    "period_months": 12,
+                    "quantity": 2
                 } 
             },
             {
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 12,
+                    "quantity": 2
                 },
                 "isOfficer": {
-                    "period_months": 36,
+                    "period_months": 12,
                     "quantity": 2
                 } 
             },
@@ -773,12 +761,12 @@
                 "start_date": "11.02.2021",
                 "end_date": "01.01.2099",
                 "nonOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 12,
+                    "quantity": 2
                 },
                 "isOfficer": {
-                    "period_months": 36,
-                    "quantity": 1
+                    "period_months": 12,
+                    "quantity": 2
                 } 
             }
         ],  
@@ -942,11 +930,11 @@
                 "end_date": "01.01.2099",
                 "nonOfficer": {
                     "period_months": 12,
-                    "quantity": 2
+                    "quantity": 3
                 },
                 "isOfficer": {
                     "period_months": 12,
-                    "quantity": 2
+                    "quantity": 3
                 }
             }
         ], 
@@ -959,36 +947,36 @@
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 }
             },
             {
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 }
             },
             {
                 "start_date": "11.02.2021",
                 "end_date": "01.01.2099",
                 "nonOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 }
             }
         ], 
@@ -1001,36 +989,36 @@
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 48,
+                    "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 48,
+                    "quantity": 1
                 }
             },
             {
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 }
             },
             {
                 "start_date": "11.02.2021",
                 "end_date": "01.01.2099",
                 "nonOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 },
                 "isOfficer": {
-                    "period_months": 12,
-                    "quantity": 2
+                    "period_months": 24,
+                    "quantity": 1
                 }
             }
         ], 
@@ -1067,13 +1055,13 @@
         "cash": 904
     },
     {
-        "item_name": "Полусапоги",
+        "item_name": "Сапоги",
         "periods": [
             {
                 "start_date": "01.01.1990",
                 "end_date": "22.12.2006",
                 "nonOfficer": {
-                    "period_months": 24,
+                    "period_months": 36,
                     "quantity": 1
                 },
                 "isOfficer": {
@@ -1085,7 +1073,7 @@
                 "start_date": "23.12.2006",
                 "end_date": "10.02.2021",
                 "nonOfficer": {
-                    "period_months": 24,
+                    "period_months": 36,
                     "quantity": 1
                 },
                 "isOfficer": {
@@ -1151,7 +1139,7 @@
         "cash": 405
     },
     {
-        "item_name": "Ремень брючный",
+        "item_name": "Пояс кожанный",
         "periods": [
             {
                 "start_date": "01.01.1990",
