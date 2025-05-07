@@ -3,12 +3,16 @@ import {calculateEquipment} from './calculate';
 import { formatDateToDDMMYYYY } from './formatDate';
 
 export function compareAndUpdateEmployeeVersions(existingEmployee: Employee) {
+    const startDate = formatDateToDDMMYYYY(existingEmployee.startDate);
+    const officerDate = formatDateToDDMMYYYY(existingEmployee.officerDate);
+    const maternityLeaveStart = existingEmployee.maternityLeaveStart ? formatDateToDDMMYYYY(existingEmployee.maternityLeaveStart) : null;
+
     // Create new version with recalculated staff data
     const newStaffData = calculateEquipment(
         existingEmployee.gender,
-        existingEmployee.startDate,
-        existingEmployee.officerDate,        
-        existingEmployee.maternityLeaveStart,
+        startDate,
+        officerDate,        
+        maternityLeaveStart,
         existingEmployee.maternityLeaveDuration || 0
     );
 

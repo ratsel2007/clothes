@@ -49,7 +49,7 @@ export function calculateEquipment(
     maternityMonths?: number
 ) {
     try {
-        const currentDate = dayjs('2025-05-06', 'YYYY-MM-DD');
+        const currentDate = dayjs();
         const employeeStartDate = dayjs(startDate, 'DD.MM.YYYY');
         const employeeOfficerDate = officerDate ? dayjs(officerDate, 'DD.MM.YYYY') : null;
         const maternityStartDate = maternityDate ? dayjs(maternityDate, 'DD.MM.YYYY') : null;

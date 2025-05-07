@@ -62,12 +62,12 @@ export class EmployeeService {
             throw new NotFoundException(`Employee with ID ${id} not found`);
         }
 
-        // const updatedStaff = compareAndUpdateEmployeeVersions(existingEmployee);
+        const updatedStaff = compareAndUpdateEmployeeVersions(existingEmployee);
 
-        // // Update employee if changes were made
-        // if (JSON.stringify(existingEmployee.staff) !== JSON.stringify(updatedStaff)) {
-        //     await existingEmployee.update({staff: updatedStaff});
-        // }
+        // Update employee if changes were made
+        if (JSON.stringify(existingEmployee.staff) !== JSON.stringify(updatedStaff)) {
+            await existingEmployee.update({staff: updatedStaff});
+        }
 
         return existingEmployee;
     }
